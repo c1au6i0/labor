@@ -39,7 +39,7 @@ path_check <- function(path) {
 
 #' create a readme
 #'
-#' Create readme file. If `path` is `data` then the file is created
+#' Create readme file. If argument `type` is `data` then the file is created
 #' in `path/data/`.
 #'
 #' @param path where to create the folder
@@ -90,9 +90,9 @@ create_readme <- function(path, type) {
   }
 }
 
-#' create or if exists overwrite readme i
+#' create or  overwrite existing readme
 #'
-#' Check if README.txt exists in parent and overwrite it based in response of user.
+#' Check if README.txt exists in parent and overwrite it if user agres.
 #'
 #' @param path the path of the parent folder to check
 #' @type  type one of `c("data", "ftree")`
@@ -108,7 +108,7 @@ create_overwrite_readme <- function(path, type) {
 
         message_out <- paste0("Readme in parent created!")
         if (file.exists(paste0(path, "/README.txt"))) {
-          over_readme <- svDialogs::dlg_message("There is already a readme!\nDo you want to overwrite it?", type = "yesno")$res
+          over_readme <- svDialogs::dlg_message("There is already a readme in parent folder!\nDo you want to overwrite it?", type = "yesno")$res
           if (over_readme == "yes") create_readme(path, "ftree")
           message(message_out)
         } else {

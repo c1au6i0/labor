@@ -18,14 +18,30 @@ sync_proj <- function(direction, path) {
 #'
 #' Transform an `RMarkdown notebook` in a `R script`
 #'
-#' @param file path to file to `purlify`
+#' @param file  file to `purlify`
+#' @param keep boolean, keep the  original file or not
 #' @details the function relies on `knitr::purl` for the muscle work, and then clean the file up further.
-#' @return `R` script  with layout common in the lab. The text is commented.
-#' @importFrom rlang .data
-#' @importFrom magrittr %>%
+#' @return `R` script  with layout used in the lab. The text is commented.
 #' @export
-purlify <- function(file) {
-  knitr::purl(file, documentation = 2)
+purlify <- function(file_n, keep = TRUE) {
+
+  # ADD check if rmd
+  browser()
+  knitr::purl(file_n, documentation = 2)
+
+  rfile_n <- sub("md$", "", file_n)
+
+  dirty_script  <- readLines(rfile_n)
+
+  # remove output lines in YAML
+  dirty_script <- dirty_script[ -c(grep("output", dirty_script) : (grep("#' ---", dirty_script)[2]-1))]
+
+
+  # replace date
+  dirty_script[grep("date", dirty_script)[1]] <- paste0("date of purlification: ", Sys.time())
+  # remove title
+  dirty_script <- sub("#' title:", "", dirty_script)
+
 }
 
 #' add_lfolder
@@ -40,8 +56,6 @@ purlify <- function(file) {
 #' @importFrom magrittr %>%
 #' @export
 add_lfolder <- function(name_lf, path = NULL, inter = TRUE) {
-  knitr::purl(file, documentation = 2)
-
   # svDialog
 }
 
