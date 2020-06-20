@@ -3,78 +3,88 @@
 #' sync the project folder with a local folder
 #'
 #' @param direction one of `c("l", "r", "bd")`
-#' @details use rsync
+#' @param inter boolean interactive choosing
+#' @param cloud if TRUE use `rdrop` else sync for local
+#' @param origin path to origin folder (default is wd)
+#' @param destination path to destination
+#' @details use rsync or rdrop
 #' @importFrom rlang .data
 #' @importFrom magrittr %>%
 #' @export
-sync_proj <- function(direction, path) {
+sync_proj <- function() {
+
+  # rjson
   rsync_installed <- system("rsync --version") == 0
   if (rsync_installed == FALSE) {
     error("rsync installation not found! Please install rsync...")
   }
-}
+  # https://phoenixnap.com/kb/rsync-exclude-files-and-directories
 
-#' purlify
-#'
-#' Transform an `RMarkdown notebook` in a `R script`
-#'
-#' @param file  file to `purlify`
-#' @param keep boolean, keep the  original file or not
-#' @details the function relies on `knitr::purl` for the muscle work, and then clean the file up further.
-#' @return `R` script  with layout used in the lab. The text is commented.
-#' @export
-purlify <- function(file_n, keep = TRUE) {
-
-  # ADD check if rmd
-  browser()
-  knitr::purl(file_n, documentation = 2)
-
-  rfile_n <- sub("md$", "", file_n)
-
-  dirty_script  <- readLines(rfile_n)
-
-  # remove output lines in YAML
-  dirty_script <- dirty_script[ -c(grep("output", dirty_script) : (grep("#' ---", dirty_script)[2]-1))]
-
-
-  # replace date
-  dirty_script[grep("date", dirty_script)[1]] <- paste0("date of purlification: ", Sys.time())
-  # remove title
-  dirty_script <- sub("#' title:", "", dirty_script)
+  # if
+  # # svDialogs::dlg_dir("")$res
 
 }
 
-#' add_lfolder
+
+
+#' sync_proj_local
 #'
-#' Add lab folder and relative documentation in the appropriate file
+#' sync the project folder with a local folder
 #'
-#' @param name_lf name of lab folder
-#' @param path path to folder
-#' @param inter boolean for using `svDialogs` to inteactively select folder
-#' @return
-#' @importFrom rlang .data
-#' @importFrom magrittr %>%
-#' @export
-add_lfolder <- function(name_lf, path = NULL, inter = TRUE) {
-  # svDialog
+#' @param direction one of `c("l_to_r", "bd")`
+#' @param inter boolean interactive choosing
+#' @param origin path to origin folder (default is wd)
+#' @param destination path to destination
+#' @details use rsync
+
+
+sync_proj_loc <- function(direction = "r", inter = "FALSE", origin = "man/", destination = "~/Desktop/man") {
+
+  rsync_installed <- system("rsync --version") == 0
+  if (rsync_installed == FALSE) {
+    error("rsync installation not found! Please install rsync...")
+  }
+
+  if(inter = TRUE){
+    r_dir <- svDialogs::dlg_list(list("left to right", "bidirectional"))$res
+
+    if (r_dir == "left to right"){
+      direction <- "r"
+    } else {
+      direction <- "bidirectional"
+    }
+
+    origin <- svDialogs::dlg_dir("Select Origin")$res
+    destination <- svDialogs::dlg_dir("Select Destination")$res
+  }
+
+  if(origin == destination) stop("Origin and destination can not be the same!")
+
+  origin <-  paste0(path_check(origin), "/")
+  destination <-paste0(path_check(destination), "/")
+
+  rsync_comand <- "rsync -avtuP"
+  all_comand <-  paste(rsync_comand, origin, destination, sep = " ")
+  system(all_comand)
+  message("Sync left to right performed!")
+
+  if (direction == "l_to_r") {
+    all_comand <-  paste(rsync_comand, destination, origin, sep = " ")
+    system(all_comand)
+    message("Sync right to left performed!")
+  }
+
+
+  # https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories-on-a-vps
+  # https://phoenixnap.com/kb/rsync-exclude-files-and-directories
+
+
 }
 
-#' remove_lfolder
-#'
-#' Remove lab folder and relative documentation in the appropriate file
-#'
-#' @param name_lf name of lab folder
-#' @param path path to folder
-#' @param inter boolean for using `svDialogs` to inteactively select folder
-#' @return
-#' @importFrom rlang .data
-#' @importFrom magrittr %>%
-#' @export
-remove_lfolder <- function(name_lf, path = NULL, inter = TRUE) {
-  knitr::purl(file, documentation = 2)
 
-  # svDialog
-}
+
+
+
 
 #' clean_up
 #'
@@ -86,6 +96,10 @@ clean_up <- function() {
 
 
 }
+
+
+
+
 
 
 #' who_wants_to_talk

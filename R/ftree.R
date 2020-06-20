@@ -5,14 +5,11 @@
 ftree <- function() {
   c(
     "/code",
-    "/code/raw",
     "/data",
-    "/figs",
     "/manuscripts",
-    "/misc",
+    "/drake_pr",
     "/objs",
-    "/reports",
-    "/text"
+    "/reports"
   )
 }
 
@@ -33,8 +30,6 @@ path_check <- function(path) {
 
   path
 }
-
-
 
 
 #' create a readme
@@ -204,7 +199,6 @@ create_ftree <- function(path = getwd()) {
 
   message("Da da! All done!")
 }
-
 
 
 #' remove_ftree
