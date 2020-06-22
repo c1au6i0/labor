@@ -45,6 +45,10 @@ create_readme <- function(path, type) {
     stop("Argument type can only be data or ftree!")
   }
 
+  # this need to be changed.
+  # I don like this (json file with 2 lists: data and description)
+  # we dont need the other readme.
+
   path <- path_check(path)
 
   if (type == "data") {
@@ -223,6 +227,17 @@ remove_ftree <- function(path = getwd()) {
 }
 
 
+
+#' clean_up
+#'
+#' Check if folder and file are in the right place documentation is present and if not
+#' cleans it up.
+#'
+#' @export
+clean_up <- function() {
+
+
+}
 
 
 

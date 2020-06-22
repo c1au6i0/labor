@@ -1,30 +1,62 @@
-#' sync_proj
+#' choose_direction
 #'
-#' sync the project folder with a local folder
+#' Use `svDialog` to choose is sync left to right or bidirectionally. Use internally
 #'
-#' @param direction one of `c("l", "r", "bd")`
-#' @param inter boolean interactive choosing
-#' @param cloud if TRUE use `rdrop` else sync for local
-#' @param origin path to origin folder (default is wd)
-#' @param destination path to destination
-#' @details use rsync or rdrop
-#' @importFrom rlang .data
-#' @importFrom magrittr %>%
-#' @export
-sync_proj <- function() {
+#' @return an atomic vector `r` or `bidirectional`
+choose_direction <- function(){
 
-  # rjson
-  rsync_installed <- system("rsync --version") == 0
-  if (rsync_installed == FALSE) {
-    error("rsync installation not found! Please install rsync...")
+  r_dir <- svDialogs::dlg_list(list("left to right", "bidirectional"))$res
+
+  if (r_dir == "left to right"){
+    direction <- "r"
+  } else {
+    direction <- "bidirectional"
   }
-  # https://phoenixnap.com/kb/rsync-exclude-files-and-directories
 
-  # if
-  # # svDialogs::dlg_dir("")$res
+  direction
 
 }
 
+
+
+
+#' sync project drop
+#'
+#' sync the project folder with dropbox folder
+#'
+#' @param direction one of `c("local_to_drop", "bd", "drop_to_local")
+#' @param local path to origin folder (default is wd)
+#' @param dropbox path to destination
+#' @param inter if interaction is true choose the direction interactivelly
+#' @details use rdrop
+#' @importFrom rlang .data
+#' @importFrom magrittr %>%
+#' @export
+sync_project_drop <-function(direction = "local_to_drop", inter = "FALSE", local, dropbox_folder){
+  rdrop2::drop_auth()
+
+  if(inter == TRUE){
+    direction <-  choose_direction()
+  }
+
+  local <-  paste0(path_check(local), "/")
+
+  if(!drop_exists(dropbox_folder)){
+    stop("Dropbox folder does not exist!")
+  }
+
+  if(length(grep("/$", dropbox)) == 0){
+    dropbox <- paste0(dropbox, "/")
+  }
+
+  if(direction == "local_to_drop"){
+    to_upload <- paste0(local, list.files(local))
+    lapply(to_upload, rdrop2::drop_upload, path = dropbox_folder)
+  }
+
+
+
+}
 
 
 #' sync_proj_local
@@ -37,7 +69,6 @@ sync_proj <- function() {
 #' @param destination path to destination
 #' @details use rsync
 
-
 sync_proj_loc <- function(direction = "r", inter = "FALSE", origin = "man/", destination = "~/Desktop/man") {
 
   rsync_installed <- system("rsync --version") == 0
@@ -45,14 +76,9 @@ sync_proj_loc <- function(direction = "r", inter = "FALSE", origin = "man/", des
     error("rsync installation not found! Please install rsync...")
   }
 
-  if(inter = TRUE){
-    r_dir <- svDialogs::dlg_list(list("left to right", "bidirectional"))$res
+  if(inter == TRUE){
 
-    if (r_dir == "left to right"){
-      direction <- "r"
-    } else {
-      direction <- "bidirectional"
-    }
+    direction <- choose_direction()
 
     origin <- svDialogs::dlg_dir("Select Origin")$res
     destination <- svDialogs::dlg_dir("Select Destination")$res
@@ -74,10 +100,8 @@ sync_proj_loc <- function(direction = "r", inter = "FALSE", origin = "man/", des
     message("Sync right to left performed!")
   }
 
-
   # https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories-on-a-vps
   # https://phoenixnap.com/kb/rsync-exclude-files-and-directories
-
 
 }
 
@@ -100,24 +124,3 @@ clean_up <- function() {
 
 
 
-
-
-#' who_wants_to_talk
-#'
-#' @param lab one of `marchionni", "wheelan", "joint`
-#'
-#' @return a message
-
-who_wants_to_talk <- function(lab = "marchionni") {
-  if (!lab %in% c("marchionni", "wheelan", "joint")) stop("lab can only be marchionni, wheelan
-                                                         , joint!")
-
-  marchionni_lab <- c("Luigi", "Claudio", "Eddie", "Mohamed", "Wikum")
-  wheelan_lab <- c("Sara", "McKinzie", "Heater", "Lauren", "Alyza")
-
-  if (lab == "marchionni") members <- marchionni_lab
-  if (lab == "wheelan") members <- wheelan_lab
-  if (lab == "joint") members <- append(marchionni_lab, wheelan_lab)
-
-  cat("Here the order:\n", paste0("[", seq(1, length(members)), "]: ", members[sample(length(members))], "\n"))
-}

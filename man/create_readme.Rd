@@ -9,9 +9,9 @@ create_readme(path, type)
 \arguments{
 \item{path}{where to create the folder}
 
-\item{type}{one pf \code{c("data", "f_tree")}}
+\item{type}{one of \code{c("data", "ftree")}}
 }
 \description{
-Create readme file. If \code{path} is \code{data} then the file is created
+Create readme file. If argument \code{type} is \code{data} then the file is created
 in \verb{path/data/}.
 }
