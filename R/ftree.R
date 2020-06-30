@@ -29,6 +29,7 @@ path_check <- function(path) {
   }
 
   path
+
 }
 
 
@@ -39,7 +40,7 @@ path_check <- function(path) {
 #'
 #' @param path where to create the folder
 #' @param type one of `c("data", "ftree")`
-#'
+#
 create_readme <- function(path, type) {
   if (!type %in% c("data", "ftree")) {
     stop("Argument type can only be data or ftree!")

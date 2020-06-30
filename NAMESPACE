@@ -3,6 +3,4 @@
 export(clean_up)
 export(create_ftree)
 export(remove_ftree)
-export(sync_project_drop)
-importFrom(magrittr,"%>%")
-importFrom(rlang,.data)
+export(sync_proj_loc)

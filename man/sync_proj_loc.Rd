@@ -6,13 +6,13 @@
 \usage{
 sync_proj_loc(
   direction = "r",
-  inter = "FALSE",
+  inter = TRUE,
   origin = "man/",
   destination = "~/Desktop/man"
 )
 }
 \arguments{
-\item{direction}{one of \code{c("l_to_r", "bd")}}
+\item{direction}{one of \code{c("left_to_right", "bidirectional")}}
 
 \item{inter}{boolean interactive choosing}
 

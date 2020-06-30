@@ -4,8 +4,7 @@
 #'
 #' @param drop boolean, dropbox
 #' @return an atomic vector `r` or `bidirectional`
-choose_direction <- function(){
-
+choose_direction <- function(drop = FALSE){
   if(!drop){
     choose_options <- list("left_to_right", "bidirectional")
   } else {
@@ -14,6 +13,55 @@ choose_direction <- function(){
   direction <- svDialogs::dlg_list(choose_options )$res
   direction
 }
+
+
+#' sync_proj_local
+#'
+#' sync the project folder with a local folder
+#'
+#' @param direction one of `c("left_to_right", "bidirectional")`
+#' @param inter boolean interactive choosing
+#' @param origin path to origin folder (default is wd)
+#' @param destination path to destination
+#' @details use rsync
+#' @export
+sync_proj_loc <- function(direction = "r", inter = TRUE, origin = "man/", destination = "~/Desktop/man") {
+
+
+  rsync_installed <- system("rsync --version") == 0
+  if (rsync_installed == FALSE) {
+    error("rsync installation not found! Please install rsync...")
+  }
+
+  if(inter == TRUE){
+    direction <- choose_direction()
+    origin <- svDialogs::dlg_dir("Select Origin")$res
+    destination <- svDialogs::dlg_dir("Select Destination")$res
+  }
+
+  if(origin == destination) stop("Origin and destination can not be the same!")
+
+  origin <-  paste0(path_check(origin), "/")
+  destination <-paste0(path_check(destination), "/")
+
+  rsync_comand <- "rsync -avtuP"
+  all_comand <-  paste(rsync_comand, origin, destination, sep = " ")
+  system(all_comand)
+  message("Sync left to right performed!")
+
+  if (direction == "bidirectional") {
+    all_comand <-  paste(rsync_comand, destination, origin, sep = " ")
+    system(all_comand)
+    message("Sync right to left performed!")
+  }
+
+  # https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories-on-a-vps
+  # https://phoenixnap.com/kb/rsync-exclude-files-and-directories
+
+}
+
+
+
 
 
 #' sync project drop
@@ -26,8 +74,6 @@ choose_direction <- function(){
 #' @param dropbox_folder `path_lower` of dropbox as returned by `drop_dir()`
 #' @param inter if interaction is true choose the direction interactively
 #' @details use rdrop
-#' @importFrom rlang .data
-#' @importFrom magrittr %>%
 sync_project_drop <- function(direction = "local_to_drop",
                               inter = "FALSE",
                               local = "~/Desktop/prova",
@@ -60,51 +106,7 @@ sync_project_drop <- function(direction = "local_to_drop",
   }
 }
 
-#' sync_proj_local
-#'
-#' sync the project folder with a local folder
-#'
-#' @param direction one of `c("left_to_right", "bidirectional")`
-#' @param inter boolean interactive choosing
-#' @param origin path to origin folder (default is wd)
-#' @param destination path to destination
-#' @details use rsync
 
-sync_proj_loc <- function(direction = "r", inter = "FALSE", origin = "man/", destination = "~/Desktop/man") {
-
-  rsync_installed <- system("rsync --version") == 0
-  if (rsync_installed == FALSE) {
-    error("rsync installation not found! Please install rsync...")
-  }
-
-  if(inter == TRUE){
-
-    direction <- choose_direction()
-
-    origin <- svDialogs::dlg_dir("Select Origin")$res
-    destination <- svDialogs::dlg_dir("Select Destination")$res
-  }
-
-  if(origin == destination) stop("Origin and destination can not be the same!")
-
-  origin <-  paste0(path_check(origin), "/")
-  destination <-paste0(path_check(destination), "/")
-
-  rsync_comand <- "rsync -avtuP"
-  all_comand <-  paste(rsync_comand, origin, destination, sep = " ")
-  system(all_comand)
-  message("Sync left to right performed!")
-
-  if (direction == "bidirectional") {
-    all_comand <-  paste(rsync_comand, destination, origin, sep = " ")
-    system(all_comand)
-    message("Sync right to left performed!")
-  }
-
-  # https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories-on-a-vps
-  # https://phoenixnap.com/kb/rsync-exclude-files-and-directories
-
-}
 
 
 

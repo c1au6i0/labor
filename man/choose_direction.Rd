@@ -4,11 +4,14 @@
 \alias{choose_direction}
 \title{choose_direction}
 \usage{
-choose_direction()
+choose_direction(drop = FALSE)
+}
+\arguments{
+\item{drop}{boolean, dropbox}
 }
 \value{
 an atomic vector \code{r} or \code{bidirectional}
 }
 \description{
-Use \code{svDialog} to choose is sync left to right or bidirectionally. Use internally
+Use \code{svDialog} to choose if sync left to right or bidirectionally. Use internally
 }

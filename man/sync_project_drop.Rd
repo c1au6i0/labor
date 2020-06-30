@@ -4,19 +4,25 @@
 \alias{sync_project_drop}
 \title{sync project drop}
 \usage{
-sync_project_drop(direction = "local_to_drop", inter = "FALSE", local, dropbox)
+sync_project_drop(
+  direction = "local_to_drop",
+  inter = "FALSE",
+  local = "~/Desktop/prova",
+  dropbox_folder = "/COVID19/Interference/reports"
+)
 }
 \arguments{
 \item{direction}{one of `c("local_to_drop", "bd", "drop_to_local")}
 
-\item{inter}{if interaction is true choose the direction interactivelly}
+\item{inter}{if interaction is true choose the direction interactively}
 
 \item{local}{path to origin folder (default is wd)}
 
-\item{dropbox}{path to destination}
+\item{dropbox_folder}{\code{path_lower} of dropbox as returned by \code{drop_dir()}}
 }
 \description{
-sync the project folder with dropbox folder
+sync the project folder with dropbox folder. Currently rdrop2 does not support uploading entire folders.
+so forget this
 }
 \details{
 use rdrop
