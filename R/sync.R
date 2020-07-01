@@ -14,7 +14,6 @@ choose_direction <- function(drop = FALSE){
   direction
 }
 
-
 #' sync_proj_local
 #'
 #' sync the project folder with a local folder
@@ -25,8 +24,7 @@ choose_direction <- function(drop = FALSE){
 #' @param destination path to destination
 #' @details use rsync
 #' @export
-sync_proj_loc <- function(direction = "r", inter = TRUE, origin = "man/", destination = "~/Desktop/man") {
-
+sync_proj_loc <- function(direction = "left_to_right", inter = TRUE, origin = "man/", destination = "~/Desktop/man") {
 
   rsync_installed <- system("rsync --version") == 0
   if (rsync_installed == FALSE) {
@@ -35,9 +33,11 @@ sync_proj_loc <- function(direction = "r", inter = TRUE, origin = "man/", destin
 
   if(inter == TRUE){
     direction <- choose_direction()
-    origin <- svDialogs::dlg_dir("Select Origin")$res
-    destination <- svDialogs::dlg_dir("Select Destination")$res
+    origin <- svDialogs::dlg_dir(title = "Select Origin")$res
+    destination <- svDialogs::dlg_dir(title = "Select Destination")$res
   }
+
+  if((length(origin) + length(desitination) + length(direction )) < 3) stop("You have to select something")
 
   if(origin == destination) stop("Origin and destination can not be the same!")
 
@@ -45,24 +45,16 @@ sync_proj_loc <- function(direction = "r", inter = TRUE, origin = "man/", destin
   destination <-paste0(path_check(destination), "/")
 
   rsync_comand <- "rsync -avtuP"
-  all_comand <-  paste(rsync_comand, origin, destination, sep = " ")
-  system(all_comand)
-  message("Sync left to right performed!")
+  all_comand <-  paste(rsync_comand, " \"",origin, "\" ", "\"",destination, "\"",sep = "")
+  sync_success <- system(all_comand) == 0
+  if(sync_success) message("Sync left to right performed!")
 
   if (direction == "bidirectional") {
     all_comand <-  paste(rsync_comand, destination, origin, sep = " ")
-    system(all_comand)
-    message("Sync right to left performed!")
+    sync_success <- system(all_comand) == 0
+    if(sync_success) message("Sync right to left performed!")
   }
-
-  # https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories-on-a-vps
-  # https://phoenixnap.com/kb/rsync-exclude-files-and-directories
-
 }
-
-
-
-
 
 #' sync project drop
 #'

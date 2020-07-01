@@ -1,13 +1,13 @@
 #' folder tree
 #'
-#' The list of folders to create. It is used internaly
+#' The list of folders to create. It is used internally
 #'
 ftree <- function() {
   c(
     "/code",
     "/data",
+    "/figs",
     "/manuscripts",
-    "/drake_pr",
     "/objs",
     "/reports"
   )
@@ -75,12 +75,10 @@ create_readme <- function(path, type) {
         "  Figures.",
         "objs:",
         "  Analysis results, including intermediate step analysis and simulated datasets.",
-        "misc:",
-        "  Additional objects needed (i.e. annotation, clinical tables, ...).",
-        " misc/refs:",
-        "   External supporting documentation to the project as pdf.",
-        "text:",
-        "   R Markdown Notebook of analysis, presentations and other text files.",
+        "manuscripts:",
+        "  Manuscripts",
+        "reports:",
+        "   Reports.",
         "",
         "Please add a brief explanation to this README file for any directory you may add"
       ),
