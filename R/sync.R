@@ -45,8 +45,6 @@ sync_proj_loc <- function(direction = "left_to_right", inter = TRUE, origin = "m
   origin <-  paste0(path_check(origin), "/")
   destination <- paste0(path_check(destination), "/")
 
-
-
   rsync_comand <- "rsync -avtuP"
   all_comand <-  paste(rsync_comand, " \"",origin, "\" ", "\"",destination, "\"",sep = "")
   sync_success <- system(all_comand) == 0
