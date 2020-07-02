@@ -37,12 +37,15 @@ sync_proj_loc <- function(direction = "left_to_right", inter = TRUE, origin = "m
     destination <- svDialogs::dlg_dir(title = "Select Destination")$res
   }
 
-  if((length(origin) + length(desitination) + length(direction )) < 3) stop("You have to select something")
+  if((length(origin) + length(destination) + length(direction )) < 3) stop("You have to select something")
 
   if(origin == destination) stop("Origin and destination can not be the same!")
 
+
   origin <-  paste0(path_check(origin), "/")
-  destination <-paste0(path_check(destination), "/")
+  destination <- paste0(path_check(destination), "/")
+
+
 
   rsync_comand <- "rsync -avtuP"
   all_comand <-  paste(rsync_comand, " \"",origin, "\" ", "\"",destination, "\"",sep = "")
