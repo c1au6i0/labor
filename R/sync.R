@@ -12,7 +12,7 @@ set_labor_sync <-  function(){
 
   utils::write.csv(destination, here::here(".labor_destination"), row.names = FALSE)
 
-  message(cat("Destination set to ", destination, "..."))
+  message(cat("Destination set to ", unlist(destination), "..."))
 }
 
 
