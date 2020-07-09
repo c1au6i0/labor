@@ -14,47 +14,75 @@ choose_direction <- function(drop = FALSE){
   direction
 }
 
+
+
+
 #' sync_proj_local
 #'
 #' sync the project folder with a local folder
 #'
 #' @param direction one of `c("left_to_right", "bidirectional")`
-#' @param inter boolean interactive choosing
-#' @param origin path to origin folder (default is wd)
+#' @param origin path to origin folder (default is here)
 #' @param destination path to destination
+#' @param exclude_files list of file to exclude. if "default" list all hidden files in parent, and folders in `renv`.
+#'     If NULL doesn't exclude files
+#' @param bidirectional boolean
 #' @details use rsync
 #' @export
-sync_proj_loc <- function(direction = "left_to_right", inter = TRUE, origin = "man/", destination = "~/Desktop/man") {
+sync_proj_loc <- function(bidirectional = FALSE,
+                          inter = TRUE,
+                          origin = here(),
+                          destination = "/Users/heverz/Desktop/man",
+                          exclude_files = "default" ) {
 
   rsync_installed <- system("rsync --version") == 0
   if (rsync_installed == FALSE) {
     error("rsync installation not found! Please install rsync...")
   }
 
-  if(inter == TRUE){
-    direction <- choose_direction()
-    origin <- svDialogs::dlg_dir(title = "Select Origin")$res
-    destination <- svDialogs::dlg_dir(title = "Select Destination")$res
-  }
-
-  if((length(origin) + length(destination) + length(direction )) < 3) stop("You have to select something")
 
   if(origin == destination) stop("Origin and destination can not be the same!")
 
+  if(!bidirectional %in%  c(TRUE, FALSE)) stop("Bidirectional can be TRUE or FALSE!")
+
 
   origin <-  paste0(path_check(origin), "/")
+
   destination <- paste0(path_check(destination), "/")
 
-  rsync_comand <- "rsync -avtuP"
-  all_comand <-  paste(rsync_comand, " \"",origin, "\" ", "\"",destination, "\"",sep = "")
-  sync_success <- system(all_comand) == 0
-  if(sync_success) message("Sync left to right performed!")
+  message(cat("Sync ", origin, " to ", destination, "..."))
 
-  if (direction == "bidirectional") {
-    all_comand <-  paste(rsync_comand, destination, origin, sep = " ")
-    sync_success <- system(all_comand) == 0
-    if(sync_success) message("Sync right to left performed!")
+  if (exclude_files == "default"){
+
+    to_exlude_files <-  c(".*", here::here("renv", "library"), here::here("renv", "python"),  here::here("renv", "staging"))
+
+  } else if (is.null(exclude_files)){
+
+    to_exlude_files <- ""
+
+  } else {
+     to_exlude_files <- exclude_files
   }
+
+  to_exclude <- paste0("--exclude " , "\"", to_exlude_files, "\"", collapse = " ")
+
+  rsync_comand <- "rsync -avtuP"
+  all_comand <-  paste(rsync_comand, " ", to_exclude, " \"", origin, "\" ", "\"", destination, "\"", sep = "")
+
+  browser()
+
+  system(all_comand)
+
+  if (bidirectional == TRUE) {
+
+    all_comand <-  paste(rsync_comand, " ", to_exclude, " \"", destination, "\" ", "\"", origin, "\"", sep = "")
+
+    system(all_comand)
+  }
+
+
+
+
 }
 
 #' sync project drop
