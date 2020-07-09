@@ -4,10 +4,10 @@
 \alias{create_ftree}
 \title{create_ftree}
 \usage{
-create_ftree(path = getwd())
+create_ftree(path = here::here())
 }
 \arguments{
-\item{path}{where to create the folder (default is \code{getwd()})}
+\item{path}{where to create the folder (default is \code{here()})}
 }
 \description{
 Create the folder tree and relative documentation files.

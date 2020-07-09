@@ -2,5 +2,6 @@
 
 export(clean_up)
 export(create_ftree)
+export(labor_sync)
 export(remove_ftree)
-export(sync_proj_loc)
+export(set_labor_sync)

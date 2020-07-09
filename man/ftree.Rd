@@ -7,5 +7,5 @@
 ftree()
 }
 \description{
-The list of folders to create. It is used internaly
+The list of folders to create. It is used internally
 }

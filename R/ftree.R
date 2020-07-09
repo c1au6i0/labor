@@ -32,7 +32,6 @@ path_check <- function(path) {
 
 }
 
-
 #' create a readme
 #'
 #' Create readme file. If argument `type` is `data` then the file is created
@@ -53,14 +52,14 @@ create_readme <- function(path, type) {
   path <- path_check(path)
 
   if (type == "data") {
-    output <- paste0(path, "/data/README.txt")
+    output <- paste0(path, "/data/README")
     sink(output)
     cat("Datasets:")
     sink()
   }
 
   if (type == "ftree") {
-    output <- paste0(path, "/README.txt")
+    output <- paste0(path, "/README")
     file_conn <- file(output)
     writeLines(
       c(
@@ -93,7 +92,7 @@ create_readme <- function(path, type) {
 #' Check if README.txt exists in parent and overwrite it if user agres.
 #'
 #' @param path the path of the parent folder to check
-#' @type  type one of `c("data", "ftree")`
+#' @param  type one of `c("data", "ftree")`
 create_overwrite_readme <- function(path, type) {
 
   path <- path_check(path)
@@ -139,10 +138,10 @@ create_overwrite_readme <- function(path, type) {
 #'
 #' Create the folder tree and relative documentation files.
 #'
-#' @param path where to create the folder (default is `getwd()`)
+#' @param path where to create the folder (default is `here()`)
 #'
 #' @export
-create_ftree <- function(path = getwd()) {
+create_ftree <- function(path = here::here()) {
   folders_t <- ftree()
   full_folders_t <- paste0(path, folders_t)
 
@@ -159,7 +158,7 @@ create_ftree <- function(path = getwd()) {
 
     # if among the folder to write there is data we have to create a readme
     if (length(grep("*data$", to_create)) > 0) {
-      create_readme(past0(path), type = "data")
+      create_readme(paste0(path), type = "data")
     }
 
     message("New folders created!\n")

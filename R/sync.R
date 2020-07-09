@@ -1,38 +1,30 @@
-#' choose_direction
+#' Set the destination of the syncing
 #'
-#' Use `svDialog` to choose if sync left to right or bidirectionally. Use internally
-#'
-#' @param drop boolean, dropbox
-#' @return an atomic vector `r` or `bidirectional`
-choose_direction <- function(drop = FALSE){
-  if(!drop){
-    choose_options <- list("left_to_right", "bidirectional")
-  } else {
-    choose_options <- list("local_to_drop", "drop_to_local", "bidirectional")
-  }
-  direction <- svDialogs::dlg_list(choose_options )$res
-  direction
+#' @export
+set_labor_sync <-  function(){
+
+  svDialogs::dlg_message("Please set the Destination folder...")
+  destination <- svDialogs::dlg_dir()$res
+
+  destination <- paste0(path_check(destination), "/")
+
+  destination <- list(destination = destination)
+
+  utils::write.csv(destination, here::here(".labor_destination"), row.names = FALSE)
+
+  message(cat("Destination set to ", destination, "..."))
 }
 
 
-
-
-#' sync_proj_local
+#' labor sync
 #'
-#' sync the project folder with a local folder
+#' sync the project folder with a local folder. The origin is alwaysy the parental director
 #'
-#' @param direction one of `c("left_to_right", "bidirectional")`
-#' @param origin path to origin folder (default is here)
-#' @param destination path to destination
-#' @param exclude_files list of file to exclude. if "default" list all hidden files in parent, and folders in `renv`.
-#'     If NULL doesn't exclude files
 #' @param bidirectional boolean
-#' @details use rsync
+#' @param exclude_files list of file to exclude. if "default" list all hidden files in parent, and folders in `renv`.
+#' @details use `rsync` to sync and `here` to identify parental directory
 #' @export
-sync_proj_loc <- function(bidirectional = FALSE,
-                          inter = TRUE,
-                          origin = here(),
-                          destination = "/Users/heverz/Desktop/man",
+labor_sync  <- function(bidirectional = FALSE,
                           exclude_files = "default" ) {
 
   rsync_installed <- system("rsync --version") == 0
@@ -40,27 +32,29 @@ sync_proj_loc <- function(bidirectional = FALSE,
     error("rsync installation not found! Please install rsync...")
   }
 
+  origin <-  paste0(here::here(), "/")
 
-  if(origin == destination) stop("Origin and destination can not be the same!")
+  if (!file.exists(here::here(".labor_destination"))) {
+    stop("Run set_labor_sync() to setuo the destination of the sync!")
+  }
+
+  destination<- unlist(  utils::read.csv(here::here(".labor_destination")))
+
+  message(cat("\nSyncing ", origin, " to ", destination, "..."))
+
+  continue <- readline (prompt = "\nPress  c to cancel or anything else to continue... ")
+
+  if (continue == "c") stop("Sync stopped!")
 
   if(!bidirectional %in%  c(TRUE, FALSE)) stop("Bidirectional can be TRUE or FALSE!")
 
-
-  origin <-  paste0(path_check(origin), "/")
-
-  destination <- paste0(path_check(destination), "/")
-
-  message(cat("Sync ", origin, " to ", destination, "..."))
-
   if (exclude_files == "default"){
 
-    to_exlude_files <-  c(".*", here::here("renv", "library"), here::here("renv", "python"),  here::here("renv", "staging"))
+    to_exlude_files <-  c(".*", "renv/library/", "renv/python/",  "renv/staging/")
 
-  } else if (is.null(exclude_files)){
+  }
 
-    to_exlude_files <- ""
-
-  } else {
+  if (length(exclude_files) > 1) {
      to_exlude_files <- exclude_files
   }
 
@@ -68,8 +62,6 @@ sync_proj_loc <- function(bidirectional = FALSE,
 
   rsync_comand <- "rsync -avtuP"
   all_comand <-  paste(rsync_comand, " ", to_exclude, " \"", origin, "\" ", "\"", destination, "\"", sep = "")
-
-  browser()
 
   system(all_comand)
 
@@ -80,54 +72,7 @@ sync_proj_loc <- function(bidirectional = FALSE,
     system(all_comand)
   }
 
-
-
-
 }
-
-#' sync project drop
-#'
-#' sync the project folder with dropbox folder. Currently rdrop2 does not support uploading entire folders.
-#' so forget this
-#'
-#' @param direction one of `c("local_to_drop", "bd", "drop_to_local")
-#' @param local path to origin folder (default is wd)
-#' @param dropbox_folder `path_lower` of dropbox as returned by `drop_dir()`
-#' @param inter if interaction is true choose the direction interactively
-#' @details use rdrop
-sync_project_drop <- function(direction = "local_to_drop",
-                              inter = "FALSE",
-                              local = "~/Desktop/prova",
-                              dropbox_folder = "/COVID19/Interference/reports"){
-  rdrop2::drop_auth()
-
-  if(inter == TRUE){
-    direction <-  choose_direction()
-  }
-
-  local <-  paste0(path_check(local), "/")
-
-  if(!drop_exists(dropbox_folder)){
-    stop("Dropbox folder does not exist!")
-  }
-
-
-  if(length(grep("/$", dropbox_folder)) == 0){
-    dropbox_folder <- paste0(dropbox_folder, "/")
-  }
-
-  if(direction %in% c("local_to_drop", "bidirectional")){
-    to_upload <- paste0(local, list.files(local))
-    lapply(to_upload, rdrop2::drop_upload, path = dropbox_folder)
-  }
-
-  if(direction  %in% c("drop_to_local","bidirectional")){
-    to_download <-drop_dir(dropbox_folder)
-    lapply(to_download$path_lower, rdrop2::drop_download, local_path = local)
-  }
-}
-
-
 
 
 

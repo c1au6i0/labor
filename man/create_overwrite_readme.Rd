@@ -8,6 +8,8 @@ create_overwrite_readme(path, type)
 }
 \arguments{
 \item{path}{the path of the parent folder to check}
+
+\item{type}{one of \code{c("data", "ftree")}}
 }
 \description{
 Check if README.txt exists in parent and overwrite it if user agres.

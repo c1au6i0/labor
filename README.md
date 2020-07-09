@@ -12,6 +12,6 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 The goal of `laboR` is to keep your project folder tidy\!
 
 It reminds you to document new datasets, it keeps the project folder
-organized, and sync with local and dropbox folder.
+organized, and sync with local folders.
 
-**This package is underdevelopment**
+**This package is under development**
