@@ -39,7 +39,6 @@ path_check <- function(path) {
 #'
 #' @param path where to create the folder
 #' @param type one of `c("data", "ftree")`
-#
 create_readme <- function(path, type) {
   if (!type %in% c("data", "ftree")) {
     stop("Argument type can only be data or ftree!")
@@ -52,10 +51,12 @@ create_readme <- function(path, type) {
   path <- path_check(path)
 
   if (type == "data") {
-    output <- paste0(path, "/data/README")
+    path <- path_check(paste0(path, "/data"))
+    output <- paste0(path, "/README")
     sink(output)
     cat("Datasets:")
     sink()
+    message("Readme created in data directory!")
   }
 
   if (type == "ftree") {
@@ -84,6 +85,7 @@ create_readme <- function(path, type) {
       file_conn
     )
     close(file_conn)
+    message("Readme created in parental directory!")
   }
 }
 
@@ -102,31 +104,20 @@ create_overwrite_readme <- function(path, type) {
   }
 
   if(type == "ftree") {
-
-        message_out <- paste0("Readme in parent created!")
-        if (file.exists(paste0(path, "/README.txt"))) {
+        if (file.exists(paste0(path, "/README"))) {
           over_readme <- svDialogs::dlg_message("There is already a readme in parent folder!\nDo you want to overwrite it?", type = "yesno")$res
           if (over_readme == "yes") create_readme(path, "ftree")
-          message(message_out)
         } else {
           create_readme(path, "ftree")
-          message(message_out)
         }
   }
 
   if(type == "data"){
-
-    path_check(paste0(path, "/data"))
-
-    message_out <- paste0("Readme in /data created!")
-
-      if (file.exists(paste0(path, "data/README.txt"))) {
+      if (file.exists(paste0(path, "data/README"))) {
         over_readme <- svDialogs::dlg_message("There is already a readme!\nDo you want to overwrite it?", type = "yesno")$res
         if (over_readme == "yes") create_readme(path, "data")
-        message(message_out)
       } else {
         create_readme(path, "data")
-        message(message_out)
       }
   }
 
@@ -207,20 +198,20 @@ create_ftree <- function(path = here::here()) {
 #'
 #' remove the folder tree and relative documentation files
 #'
-#' @param path where to create the folder (defaut is `getwd()`)
+#' @param path where to create the folder (defaut is `here()`)
 #'
 #' @export
-remove_ftree <- function(path = getwd()) {
+remove_ftree <- function(path = here::here()) {
 
   path <- path_check(path)
 
   folders_t <- ftree()
   full_folders_t <- paste0(path, folders_t)
-
   unlink(full_folders_t, recursive = TRUE)
 
-  message("Folders removed!\n")
-  unlink(paste0(path, "/README.txt"))
+  unlink(paste0(path, "/README"))
+
+  message("Folders and readme removed!\n")
 
 }
 
@@ -230,8 +221,6 @@ remove_ftree <- function(path = getwd()) {
 #'
 #' Check if folder and file are in the right place documentation is present and if not
 #' cleans it up.
-#'
-#' @export
 clean_up <- function() {
 
 

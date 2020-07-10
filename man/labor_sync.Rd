@@ -4,12 +4,20 @@
 \alias{labor_sync}
 \title{labor sync}
 \usage{
-labor_sync(bidirectional = FALSE, exclude_files = "default")
+labor_sync(
+  direction = "or_de",
+  exclude_files = "default",
+  rsync_flags = "-avtuP"
+)
 }
 \arguments{
-\item{bidirectional}{boolean}
+\item{direction}{one of \verb{c("or_de", "de_or", "bidir") that stands origin to destination, destination to origin or bidirectional. Defalut is }or_de`}
 
-\item{exclude_files}{list of file to exclude. if "default" list all hidden files in parent, and folders in \code{renv}.}
+\item{exclude_files}{list of file to exclude. If "default" do not sync hidden files in parent, and folders in \code{renv}. If
+"none" will sync everything.}
+
+\item{rsync_flags}{flag to use wit \code{rsync}, default is \code{-avtuP}. Check \href{https://ss64.com/bash/rsync_options.html}{rsync page}
+for the complete list of options.}
 }
 \description{
 sync the project folder with a local folder. The origin is alwaysy the parental director

@@ -4,10 +4,10 @@
 \alias{remove_ftree}
 \title{remove_ftree}
 \usage{
-remove_ftree(path = getwd())
+remove_ftree(path = here::here())
 }
 \arguments{
-\item{path}{where to create the folder (defaut is \code{getwd()})}
+\item{path}{where to create the folder (defaut is \code{here()})}
 }
 \description{
 remove the folder tree and relative documentation files

@@ -1,5 +1,7 @@
 #' Set the destination of the syncing
 #'
+#' Interactively set the folder to sync. That info will be recorder in `.labor_destination` in the parental directory
+#'
 #' @export
 set_labor_sync <-  function(){
 
@@ -7,7 +9,6 @@ set_labor_sync <-  function(){
   destination <- svDialogs::dlg_dir()$res
 
   destination <- paste0(path_check(destination), "/")
-
   destination <- list(destination = destination)
 
   utils::write.csv(destination, here::here(".labor_destination"), row.names = FALSE)
@@ -18,57 +19,75 @@ set_labor_sync <-  function(){
 
 #' labor sync
 #'
-#' sync the project folder with a local folder. The origin is alwaysy the parental director
+#' sync the project folder with the local folder set by `set_labor_sync`. The origin is always the parental director found
+#' by `here::here()`.
 #'
-#' @param bidirectional boolean
-#' @param exclude_files list of file to exclude. if "default" list all hidden files in parent, and folders in `renv`.
+#' @param direction one of `c("or_de", "de_or", "bidir") meaning `origin to destination`, `destination to origin` or
+#'      `bidirectional`. Defalut is `or_de`.
+#' @param exclude_files list of files to exclude. If "default", it will  not sync hidden files in parent as well as  folders in `renv`. If
+#'    "none" will sync everything.
+#' @param rsync_flags flag to use wit `rsync`.  Default is `-avtuP`. Check \href{https://ss64.com/bash/rsync_options.html}{rsync page}
+#'     for the complete list of options.
 #' @details use `rsync` to sync and `here` to identify parental directory
 #' @export
-labor_sync  <- function(bidirectional = FALSE,
-                          exclude_files = "default" ) {
+labor_sync  <- function(direction = "or_de",
+                        exclude_files = "default",
+                        rsync_flags = "-avtuP") {
 
+
+  # Check if rsync is installed and parameters
   rsync_installed <- system("rsync --version") == 0
   if (rsync_installed == FALSE) {
     error("rsync installation not found! Please install rsync...")
   }
 
-  origin <-  paste0(here::here(), "/")
-
   if (!file.exists(here::here(".labor_destination"))) {
     stop("Run set_labor_sync() to setuo the destination of the sync!")
   }
 
-  destination<- unlist(  utils::read.csv(here::here(".labor_destination")))
+  if(!direction %in% c("or_de", "de_or", "bidir")) stop("Direction can only be `or_de`, `de_or`, `bidir`)!")
 
-  message(cat("\nSyncing ", origin, " to ", destination, "..."))
+
+  # check if user wants to continue
+  origin <-  paste0(here::here(), "/")
+
+  destination <- unlist(utils::read.csv(here::here(".labor_destination")))
+
+
+  mess <- paste0("\nSyncing ", origin, " to ", destination, "..\n")
+  sep_mess <- paste(rep.int("=", nchar(mess)), collapse = "")
+  message(paste0(sep_mess,mess,sep_mess))
+
 
   continue <- readline (prompt = "\nPress  c to cancel or anything else to continue... ")
-
   if (continue == "c") stop("Sync stopped!")
 
-  if(!bidirectional %in%  c(TRUE, FALSE)) stop("Bidirectional can be TRUE or FALSE!")
 
+  # file to exclude
   if (exclude_files == "default"){
-
     to_exlude_files <-  c(".*", "renv/library/", "renv/python/",  "renv/staging/")
-
   }
 
-  if (length(exclude_files) > 1) {
+  if (!exclude_files %in% c("none", "default")) {
      to_exlude_files <- exclude_files
   }
 
-  to_exclude <- paste0("--exclude " , "\"", to_exlude_files, "\"", collapse = " ")
+  # here the rsync command is constructed
+  if (exclude_files == "none"){
+    to_exclude <-  " "
+  } else {
+    to_exclude <- paste0("--exclude " , "\"", to_exlude_files, "\"", collapse = " ")
+  }
 
-  rsync_comand <- "rsync -avtuP"
-  all_comand <-  paste(rsync_comand, " ", to_exclude, " \"", origin, "\" ", "\"", destination, "\"", sep = "")
+  rsync_comand <- paste0("rsync ", rsync_flags)
 
-  system(all_comand)
+  if (direction %in% c("or_de", "bidir")) {
+    all_comand <-  paste(rsync_comand, " ", to_exclude, " \"", origin, "\" ", "\"", destination, "\"", sep = "")
+    system(all_comand)
+  }
 
-  if (bidirectional == TRUE) {
-
+  if (direction %in% c("de_or", "bidir")) {
     all_comand <-  paste(rsync_comand, " ", to_exclude, " \"", destination, "\" ", "\"", origin, "\"", sep = "")
-
     system(all_comand)
   }
 
@@ -85,6 +104,22 @@ clean_up <- function() {
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
