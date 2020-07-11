@@ -1,11 +1,10 @@
 Package: labor
 Type: Package
 Title: it works
-Version: 0.0.0.9
+Version: 0.0.0.95
 Author: Claudio Zanettini
 Maintainer: Claudio Zanettini <claudio.zanettini@gmail.com>
-Description: Just make it easier to keep folder lab in order and sync it.
-    Just that. I know someone that has done it in bash...
+Description: Just make it easier to keep folder lab in order and sync it locally.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

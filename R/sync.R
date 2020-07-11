@@ -3,13 +3,16 @@
 #' Interactively set the folder to sync. That info will be recorder in `.labor_destination` in the parental directory
 #'
 #' @export
-set_labor_sync <-  function(){
+set_sync_lab<-  function(){
 
   svDialogs::dlg_message("Please set the Destination folder...")
   destination <- svDialogs::dlg_dir()$res
 
   destination <- paste0(path_check(destination), "/")
-  destination <- list(destination = destination)
+
+  sink(here::here(".labor_destination"))
+  cat(paste0("# Destination Path for lab_sync\n", destination))
+  sink()
 
   utils::write.csv(destination, here::here(".labor_destination"), row.names = FALSE)
 
@@ -19,7 +22,7 @@ set_labor_sync <-  function(){
 
 #' labor sync
 #'
-#' sync the project folder with the local folder set by `set_labor_sync`. The origin is always the parental director found
+#' sync the project folder with the local folder set by `set_lab_sync`. The origin is always the parental director found
 #' by `here::here()`.
 #'
 #' @param direction one of `c("or_de", "de_or", "bidir") meaning `origin to destination`, `destination to origin` or
@@ -30,7 +33,7 @@ set_labor_sync <-  function(){
 #'     for the complete list of options.
 #' @details use `rsync` to sync and `here` to identify parental directory
 #' @export
-labor_sync  <- function(direction = "or_de",
+sync_lab <- function(direction = "or_de",
                         exclude_files = "default",
                         rsync_flags = "-avtuP") {
 
@@ -42,7 +45,7 @@ labor_sync  <- function(direction = "or_de",
   }
 
   if (!file.exists(here::here(".labor_destination"))) {
-    stop("Run set_labor_sync() to setuo the destination of the sync!")
+    stop("Run set_lab_sync() to setup the destination of the sync!")
   }
 
   if(!direction %in% c("or_de", "de_or", "bidir")) stop("Direction can only be `or_de`, `de_or`, `bidir`)!")
@@ -51,12 +54,13 @@ labor_sync  <- function(direction = "or_de",
   # check if user wants to continue
   origin <-  paste0(here::here(), "/")
 
-  destination <- unlist(utils::read.csv(here::here(".labor_destination")))
+  destination <-  scan(here::here(".labor_destination"),
+       comment.char = "#", what = "character", n = 1, quiet = TRUE)
 
-
-  mess <- paste0("\nSyncing ", origin, " to ", destination, "..\n")
-  sep_mess <- paste(rep.int("=", nchar(mess)), collapse = "")
-  message(paste0(sep_mess,mess,sep_mess))
+  # Message
+  mess <- paste0("Syncing ", origin, " to ", destination)
+  sep_mess <- paste(rep("=", nchar(mess)), collapse = "")
+  message(paste0(sep_mess,"\n", mess, "\n", sep_mess ))
 
 
   continue <- readline (prompt = "\nPress  c to cancel or anything else to continue... ")
@@ -95,15 +99,32 @@ labor_sync  <- function(direction = "or_de",
 
 
 
-#' clean_up
-#'
-#' Check if folder and file are in the right place documentation is present and if not
-#' cleans it up.
-#'
-clean_up <- function() {
 
 
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
