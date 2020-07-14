@@ -3,13 +3,12 @@
 #' Interactively set the folder to sync. That info will be recorder in `.labor_destination` in the parental directory
 #'
 #' @export
-set_sync_lab<-  function(){
+set_sync_lab <-  function(){
 
   svDialogs::dlg_message("Please set the Destination folder...")
   destination <- svDialogs::dlg_dir()$res
 
   destination <- paste0(path_check(destination), "/")
-
   sink(here::here(".labor_destination"))
   cat(paste0("# Destination Path for lab_sync\n", destination))
   sink()
