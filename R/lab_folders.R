@@ -230,11 +230,14 @@ remove_labtree <- function(path = here::here()) {
 check_lab <- function(path = here::here()) {
   browser()
 
-  # check if all folder are OK
+  # check if all folders are OK in parental
   folders_lab <- list.dirs(path, recursive = FALSE, full.names = FALSE)
   folders_lab <- grep("^[^.]", folders_lab, value = TRUE)
-
   expected_lab <- sub("/", "", labtree())
+
+  folders_excess <- folders_lab[!folders_lab %in% expected_lab]
+  folders_missing <- expected_lab[!expected_lab %in% folders_lab]
+
 
 
 }
