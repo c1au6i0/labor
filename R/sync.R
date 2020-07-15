@@ -16,7 +16,7 @@ set_sync_lab <-  function(){
   }
 
   sink(here::here(".labor_destination"))
-  cat(paste0("# Destination Path for lab_sync\n", destination))
+  cat(paste0("# Destination Path for lab_sync\n", "\"", destination, "\""))
   sink()
 
   message(cat("Destination set to ", destination, "..."))
