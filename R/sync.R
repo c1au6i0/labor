@@ -8,14 +8,19 @@ set_sync_lab <-  function(){
   svDialogs::dlg_message("Please set the Destination folder...")
   destination <- svDialogs::dlg_dir()$res
 
+
   destination <- paste0(path_check(destination), "/")
+
+  if (file.exists(here::here(".labor_destination"))) {
+    unlink(here::here(".labor_destination"))
+  }
+
   sink(here::here(".labor_destination"))
   cat(paste0("# Destination Path for lab_sync\n", destination))
   sink()
 
-  utils::write.csv(destination, here::here(".labor_destination"), row.names = FALSE)
+  message(cat("Destination set to ", destination, "..."))
 
-  message(cat("Destination set to ", unlist(destination), "..."))
 }
 
 
