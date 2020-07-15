@@ -230,13 +230,33 @@ remove_labtree <- function(path = here::here()) {
 check_lab <- function(path = here::here()) {
   browser()
 
+  path <- "/Users/heverz/Documents/R_projects/covid19_interference"
+
   # check if all folders are OK in parental
   folders_lab <- list.dirs(path, recursive = FALSE, full.names = FALSE)
   folders_lab <- grep("^[^.]", folders_lab, value = TRUE)
-  expected_lab <- sub("/", "", labtree())
+  expected_lab <- c(sub("/", "", labtree()), "renv")
 
+  # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  # Check folders in parent -------
+  # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   folders_excess <- folders_lab[!folders_lab %in% expected_lab]
   folders_missing <- expected_lab[!expected_lab %in% folders_lab]
+
+  # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  # Check files in parents no hidden ----
+  # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+  files_folders_parent <- list.files(path, all.files = FALSE, include.dirs = FALSE)
+  files_parent <- files_parent[!files_parent %in% folders_lab]
+
+  # If files are Rproj or renv_lock thats fine
+  files_parent_excess <-  files_parent[!files_parent %in% grep("Rproj$|lock", files_parent, perl = TRUE, value = TRUE)]
+
+  # @@@@@@@@@@@@@@@@@@@@@@@
+  # Check othe folders ----
+  # @@@@@@@@@@@@@@@@@@@@@@@
+  folder_to_check <- expected_lab[!expected_lab %in% folders_missing]
 
 
 
