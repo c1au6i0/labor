@@ -9,7 +9,7 @@ set_sync_lab <-  function(){
   destination <- svDialogs::dlg_dir()$res
 
 
-  destination <- paste0(path_check(destination), "/")
+  destination <- paste0(check_path(destination), "/")
 
   if (file.exists(here::here(".labor_destination"))) {
     unlink(here::here(".labor_destination"))

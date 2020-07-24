@@ -12,7 +12,9 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
 Imports: 
     svDialogs (>= 1.0.2),
-    here (>= 0.1)
+    here (>= 0.1),
+    tidyr (>= 1.1.0),
+    magrittr (>= 1.5)
 Remotes: 
     SciViews/svDialogs
 Depends: 

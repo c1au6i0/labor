@@ -21,7 +21,7 @@ labtree <- function() {
 #'
 #' @param path the path of the folder to check
 #' @return the `path` if exists, otherwise it throws an Error
-path_check <- function(path) {
+check_path <- function(path) {
   # if slash end of path, remove it
   path <- sub("/$", "", path)
 
@@ -50,10 +50,10 @@ create_readme <- function(path, type) {
   # I don like this (json file with 2 lists: data and description)
   # we dont need the other readme.
 
-  path <- path_check(path)
+  path <- check_path(path)
 
   if (type == "data") {
-    path <- path_check(paste0(path, "/data"))
+    path <- check_path(paste0(path, "/data"))
     output <- paste0(path, "/README")
     sink(output)
     cat("Datasets:")
@@ -103,7 +103,7 @@ create_readme <- function(path, type) {
 #' @param  type one of `c("data", "labtree")`
 create_overwrite_readme <- function(path, type) {
 
-  path <- path_check(path)
+  path <- check_path(path)
 
   if (!type %in% c("data", "labtree")) {
     stop("Argument type can only be data or labtree!")
@@ -136,8 +136,8 @@ create_overwrite_readme <- function(path, type) {
 #' which one to overwrite. It use the library `svDialogs` as interactive gui
 #'
 #' @param path where to create the folder (default is `here()`)
-#'
 #' @export
+
 create_labtree <- function(path = here::here()) {
   folders_t <- labtree()
   full_folders_t <- paste0(path, folders_t)
@@ -209,7 +209,7 @@ create_labtree <- function(path = here::here()) {
 #' @export
 remove_labtree <- function(path = here::here()) {
 
-  path <- path_check(path)
+  path <- check_path(path)
 
   folders_t <- labtree()
   full_folders_t <- paste0(path, folders_t)
@@ -226,11 +226,15 @@ remove_labtree <- function(path = here::here()) {
 #'
 #' Check if folder and file are in the right place documentation is present and if not
 #' cleans it up.
-#'
+#' @importFrom magrittr %>%
 check_lab <- function(path = here::here()) {
   browser()
 
   path <- "/Users/heverz/Documents/R_projects/covid19_interference"
+
+
+  path <- check_path(path)
+
 
   # check if all folders are OK in parental
   folders_lab <- list.dirs(path, recursive = FALSE, full.names = FALSE)
@@ -243,12 +247,11 @@ check_lab <- function(path = here::here()) {
   folders_excess <- folders_lab[!folders_lab %in% expected_lab]
   folders_missing <- expected_lab[!expected_lab %in% folders_lab]
 
-  # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   # Check files in parents no hidden ----
-  # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
+  # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   files_folders_parent <- list.files(path, all.files = FALSE, include.dirs = FALSE)
-  files_parent <- files_parent[!files_parent %in% folders_lab]
+  files_parent <- files_folders_parent[!files_folders_parent %in% folders_lab]
 
   # If files are Rproj or renv_lock thats fine
   files_parent_excess <-  files_parent[!files_parent %in% grep("Rproj$|lock", files_parent, perl = TRUE, value = TRUE)]
@@ -258,8 +261,19 @@ check_lab <- function(path = here::here()) {
   # @@@@@@@@@@@@@@@@@@@@@@@
   folder_to_check <- expected_lab[!expected_lab %in% folders_missing]
 
+  # check code folder.
+  # expected: R, Rmd, md, txt, rtf, py, ipynb, RMarkdown
+  files_code <-  data.frame(files =  list.files(paste0(path, "/code"), recursive = TRUE)) %>%
+    tidyr::separate(.data$files, sep = "\\.", into = c("file", "ext"), fill = "right")
 
+  summary_files <- files_code %>%
+    dplyr::group_by(.data$ext) %>%
+    dplyr::summarize(n = dplyr::n())
 
+  cat(unlist(summary_files[1,]))
+  cat(unlist(summary_files[2,]))
+  cat(unlist(summary_files[3,]))
+  cat(unlist(summary_files[3,]))
 }
 
 
