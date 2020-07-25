@@ -15,24 +15,7 @@ labtree <- function() {
   )
 }
 
-#' check if path exists
-#'
-#' Check if the path exists.
-#'
-#' @param path the path of the folder to check
-#' @return the `path` if exists, otherwise it throws an Error
-check_path <- function(path) {
-  # if slash end of path, remove it
-  path <- sub("/$", "", path)
 
-  # does folder exists
-  if (dir.exists(path) == FALSE) {
-    stop(paste0("The directory ", path," does not exist!"))
-  }
-
-  path
-
-}
 
 #' create a readme
 #'
@@ -232,9 +215,7 @@ check_lab <- function(path = here::here()) {
 
   path <- "/Users/heverz/Documents/R_projects/covid19_interference"
 
-
   path <- check_path(path)
-
 
   # check if all folders are OK in parental
   folders_lab <- list.dirs(path, recursive = FALSE, full.names = FALSE)
@@ -257,7 +238,7 @@ check_lab <- function(path = here::here()) {
   files_parent_excess <-  files_parent[!files_parent %in% grep("Rproj$|lock", files_parent, perl = TRUE, value = TRUE)]
 
   # @@@@@@@@@@@@@@@@@@@@@@@
-  # Check othe folders ----
+  # Check other folders ----
   # @@@@@@@@@@@@@@@@@@@@@@@
   folder_to_check <- expected_lab[!expected_lab %in% folders_missing]
 
@@ -270,10 +251,7 @@ check_lab <- function(path = here::here()) {
     dplyr::group_by(.data$ext) %>%
     dplyr::summarize(n = dplyr::n())
 
-  cat(unlist(summary_files[1,]))
-  cat(unlist(summary_files[2,]))
-  cat(unlist(summary_files[3,]))
-  cat(unlist(summary_files[3,]))
+
 }
 
 
