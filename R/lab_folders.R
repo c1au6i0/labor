@@ -242,19 +242,41 @@ check_lab <- function(path = here::here()) {
   # @@@@@@@@@@@@@@@@@@@@@@@
   folder_to_check <- expected_lab[!expected_lab %in% folders_missing]
 
-  # check code folder.
-  # expected: R, Rmd, md, txt, rtf, py, ipynb, RMarkdown
-  files_code <-  data.frame(files =  list.files(paste0(path, "/code"), recursive = TRUE)) %>%
-    tidyr::separate(.data$files, sep = "\\.", into = c("file", "ext"), fill = "right")
 
-  summary_files <- files_code %>%
-    dplyr::group_by(.data$ext) %>%
-    dplyr::summarize(n = dplyr::n())
+
 
 
 }
 
 
+# "/code",
+# "/data",
+# "/documents",
+# "/figs",
+# "/manuscripts",
+# "/misc",
+# "/objs",
+# "/reports"
+# )
+
+
+code_lab <-   c("R", "RMD", "RMarkdown", "txt", "md")
+data_lab <- c("rda", "rds", "csv", "xls", "xlsm", "xlsx", "txt", "md")
+documents_lab <- c("pdf", "html", "doc", "docm", "docx", "txt", "md")
+figs_lab <-   c("html", "png", "pdf", "tex", "log", "aux", "txt", "md")
+manuscripts_lab <- unique(unlist(c(documents_lab, figs_lab, "RMD", "RMarkdown")))
+objs_lab <- data_lab
+reports_lab <- manuscripts_lab
+
+max_n  <- length(manuscripts_lab)
+
+folder_ext <- data.frame()[1:max_n, ]
+
+for(x in c(code_lab, documents_lab, figs_lab, manuscripts_lab, objs_lab, reports_lab)){
+
+  folder_ext <- cbind(x[seq(1:max_n)], folder_ext)
+
+}
 
 
 
