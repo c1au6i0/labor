@@ -1,4 +1,3 @@
-
 # Folders and expected extensions
 
 code_lab <-   c("R", "RMD", "RMarkdown", "txt", "md")

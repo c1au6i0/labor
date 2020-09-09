@@ -26,13 +26,18 @@ check_path <- function(path) {
 #' @param ext a vector of expected extensions of expected files
 #'
 #' @return list with all_files, missplaced files, and a dataframe summary
+#' @importFrom magrittr %>%
 check_files_folder <- function(path, ext){
 
+  # browser()
+  # path <- "/Users/heverz/Documents/R_projects/covid19_interference/code"
   files_code <-  data.frame(files =  list.files(path, recursive = TRUE)) %>%
-    tidyr::separate(.data$files, sep = "\\.", into = c("file", "extension"), fill = "right")
+    tidyr::extract(col = .data$files, into = c("file", "extension"), regex = "(.+)\\.([[:alnum:]]+)") %>%
+    dplyr::mutate(extension = tolower(.data$extension))
+
 
   all_files <- files_code %>%
-    dplyr::mutate(tidyness = dplyr::if_else(extension %in% !!ext, "OK", "misplaced"))
+    dplyr::mutate(tidyness = dplyr::if_else(extension %in% !!ext, "ok", "misplaced"))
 
   misplaced_files <- all_files[all_files$tidyness == "misplaced", ]
 
@@ -42,9 +47,6 @@ check_files_folder <- function(path, ext){
 
  list(all_files = all_files, misplaced_files = misplaced_files, summary_files = summary_files)
 }
-
-
-
 
 
 
