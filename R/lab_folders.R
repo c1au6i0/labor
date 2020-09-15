@@ -29,9 +29,6 @@ create_readme <- function(path, type) {
     stop("Argument type can only be data or labtree!")
   }
 
-  # this need to be changed.
-  # I don like this (json file with 2 lists: data and description)
-  # we dont need the other readme.
 
   path <- check_path(path)
 
@@ -205,15 +202,13 @@ remove_labtree <- function(path = here::here()) {
 }
 
 
-#' clean_up
+#' cleck lab folder
 #'
-#' Check if folder and file are in the right place documentation is present and if not
-#' cleans it up.
-#' @importFrom magrittr %>%
+#' Check if folder and file are in the right place
+#' @param path where to check (defaut is `here()`)
+#'
+#' @export
 check_lab <- function(path = here::here()) {
-  browser()
-
-  path <- "/Users/heverz/Documents/R_projects/covid19_interference"
 
   path <- check_path(path)
 
@@ -222,32 +217,106 @@ check_lab <- function(path = here::here()) {
   folders_lab <- grep("^[^.]", folders_lab, value = TRUE)
   expected_lab <- c(sub("/", "", labtree()), "renv")
 
-  # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   # Check folders in parent -------
-  # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   folders_excess <- folders_lab[!folders_lab %in% expected_lab]
   folders_missing <- expected_lab[!expected_lab %in% folders_lab]
 
-  # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  # Check files in parents no hidden ----
-  # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  message("Analyzing labtree ---------------------------\n")
+  summary_folders <- data.frame("folders" = c("excess", "missing"),
+                                 "tot" = unlist(lapply(list(folders_excess, folders_missing), length)))
+
+  message("\nSummary of folders:")
+  print(knitr::kable(summary_folders,  align = "c", row.names = FALSE))
+
+  if(length(folders_excess) > 0){
+    print(knitr::kable(as.data.frame(folders_excess),  align = "c", row.names = FALSE))
+  }
+
+  if(length(folders_excess) > 0){
+    print(knitr::kable(as.data.frame(folders_missing),  align = "c", row.names = FALSE))
+  }
+
+
+  # Check files in parents no hidden ------------
   files_folders_parent <- list.files(path, all.files = FALSE, include.dirs = FALSE)
   files_parent <- files_folders_parent[!files_folders_parent %in% folders_lab]
 
   # If files are Rproj or renv_lock thats fine
   files_parent_excess <-  files_parent[!files_parent %in% grep("Rproj$|lock", files_parent, perl = TRUE, value = TRUE)]
 
-  # @@@@@@@@@@@@@@@@@@@@@@@
-  # Check other folders ----
-  # @@@@@@@@@@@@@@@@@@@@@@@
-  folders_to_check <- expected_lab[!expected_lab %in% c(folders_missing, "renv")]
+  # misc by definition can have everything
+  folders_to_check <- expected_lab[!expected_lab %in% c(folders_missing, "renv", "misc")]
 
-  check_files_folder(file.path(path, folders_to_check[1]), folder_ext$code)
+  # check_files_folder(file.path(path, folders_to_check[1]), folder_ext[, names(folder_ext) %in% c("code")])
+
+  if( length(folders_to_check) == 0) {
+    message("There are no folder that can be checked! Run create_labtree to create folders!")
+  }
+
+  message("\nAnalyzing  files in labtree -----------------\n")
+  if( length(folders_to_check) == 0) {
+    message("There are no folder that can be checked! Run create_labtree to create folders!")
+  }
+
+  if( length(folders_to_check) == 1) {
+    all_summary <- check_files_folder(file.path(path, folders_to_check), folder_ext[, names(folder_ext) %in% folders_to_check])
+    misplace_files <-   check_files_folder(
+                                    file.path(path, folders_to_check),
+                                    folder_ext[, names(folder_ext) %in% folders_to_check],
+                                    out = "misplaced_files",
+                                    verbose = FALSE)
+  }
+
+  if( length(folders_to_check) > 1) {
+
+    all_summary_list <- as.data.frame(mapply(check_files_folder,
+                                             file.path(path, folders_to_check),
+                                             folder_ext[, names(folder_ext) %in% folders_to_check]))
+
+    all_summary <- do.call(rbind, all_summary_list)
+
+    misplace_files_list <-   mapply(check_files_folder,
+                                    file.path(path, folders_to_check),
+                                    folder_ext[, names(folder_ext) %in% folders_to_check],
+                                    out = "misplaced_files",
+                                    SIMPLIFY = FALSE)
+
+    misplace_files <- do.call(rbind, misplace_files_list)
+    misplace_files <- na.omit(misplace_files)
+
+  }
+
+  message("\nSummary of files:")
+  print(knitr::kable(all_summary, row.names = FALSE, align = "c"))
+
+  if(nrow(misplace_files) > 0){
+    message("\nMisplaced files:")
+    print(knitr::kable(misplace_files,  align = c("l", "c", "c"), row.names = FALSE))
+  } else{
+    cat("\nVery good! No misplaced files!")
+  }
+
+}
+
+
+#' labtree wizard
+#'
+#' Choose folders to use in the labtree
+
+#'
+setup_labtree <- function(path = here::here()) {
+
+  # we add data by default.
+
+  # do you want to use the defaul labtree?
+
+  folders_user <- svDialogs::dlg_input("Insert the name of folders separated by comma and without quotes")$res
+  folders_stripted <- unlist(strsplit(folders_user, ","))
+  folders_cl <- unique(c(gsub("[[:punct:]]|\\s", "", folders_stripted), "data"))
 
 
 
 }
-
 
 
 

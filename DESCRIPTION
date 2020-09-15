@@ -14,8 +14,11 @@ Imports:
     svDialogs (>= 1.0.2),
     here (>= 0.1),
     tidyr (>= 1.1.0),
-    magrittr (>= 1.5)
+    magrittr (>= 1.5),
+    knitr (>= 1.28)
 Remotes: 
     SciViews/svDialogs
 Depends: 
     R (>= 2.10)
+Suggests: 
+    testthat
