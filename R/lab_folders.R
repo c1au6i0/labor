@@ -206,7 +206,7 @@ remove_labtree <- function(path = here::here()) {
 #'
 #' Check if folder and file are in the right place
 #' @param path where to check (defaut is `here()`)
-#'
+#' @importFrom stats na.omit
 #' @export
 check_lab <- function(path = here::here()) {
 
@@ -303,7 +303,7 @@ check_lab <- function(path = here::here()) {
 #'
 #' Choose folders to use in the labtree
 
-#'
+#' @param path path
 setup_labtree <- function(path = here::here()) {
 
   # we add data by default.
@@ -313,6 +313,7 @@ setup_labtree <- function(path = here::here()) {
   folders_user <- svDialogs::dlg_input("Insert the name of folders separated by comma and without quotes")$res
   folders_stripted <- unlist(strsplit(folders_user, ","))
   folders_cl <- unique(c(gsub("[[:punct:]]|\\s", "", folders_stripted), "data"))
+
 
 
 

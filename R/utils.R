@@ -22,11 +22,12 @@ check_path <- function(path) {
 #'
 #' It checks the extension of files in a folder. It also count the unexpected files.
 #'
-#' @param path
+#' @param path the path
 #' @param ext a vector of expected extensions of expected files
 #' @param verbose if TRUE displays some messages related to the check
 #' @param out `all_files` for a list of all files,  `summary_files` for a summary or `misplaced_files` for a list of misplaced files
 #' @return  all_files, missplaced files, or  dataframe summary
+#' @importFrom rlang .data
 check_files_folder <- function(path, ext, verbose = TRUE, out = "summary_files"){
 #
   # browser()

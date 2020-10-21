@@ -2,11 +2,13 @@
 % Please edit documentation in R/lab_folders.R
 \name{check_lab}
 \alias{check_lab}
-\title{clean_up}
+\title{cleck lab folder}
 \usage{
 check_lab(path = here::here())
 }
+\arguments{
+\item{path}{where to check (defaut is \code{here()})}
+}
 \description{
-Check if folder and file are in the right place documentation is present and if not
-cleans it up.
+Check if folder and file are in the right place
 }

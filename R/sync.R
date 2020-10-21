@@ -45,7 +45,7 @@ sync_lab <- function(direction = "or_de",
   # Check if rsync is installed and parameters
   rsync_installed <- system("rsync --version") == 0
   if (rsync_installed == FALSE) {
-    error("rsync installation not found! Please install rsync...")
+    stop("rsync installation not found! Please install rsync...")
   }
 
   if (!file.exists(here::here(".labor_destination"))) {
