@@ -65,8 +65,12 @@ check_files_folder <- function(path, ext, verbose = TRUE, out = "summary_files")
 
 
 
-
-
+#' return dots
+#'
+#' Returns the dots argument. Used internally for testing set_sync_lab and sync_lab
+return_dots <- function(x){
+  x
+}
 
 
 

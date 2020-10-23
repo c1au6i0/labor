@@ -72,19 +72,19 @@
       "Repository": "CRAN",
       "Hash": "ebaa97ac99cc2daf04e77eecc7b781d7"
     },
-    "cpp11": {
-      "Package": "cpp11",
-      "Version": "0.2.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "c4c83167f43ca762a9fa998d4fead3ae"
-    },
     "crayon": {
       "Package": "crayon",
       "Version": "1.3.4",
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "0d57bc8e27b7ba9e45dba825ebc0de6b"
+    },
+    "credentials": {
+      "Package": "credentials",
+      "Version": "1.3.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "a96728288c75a814c900af9da84387be"
     },
     "curl": {
       "Package": "curl",
@@ -156,19 +156,42 @@
       "Repository": "CRAN",
       "Hash": "b8cff1d1391fd1ad8b65877f4c7f2e53"
     },
+    "gert": {
+      "Package": "gert",
+      "Version": "1.0.2",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "gert",
+      "RemoteUsername": "r-lib",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "69be66c86ec7c9bea5e907a72a28b90c976f4e21",
+      "Hash": "b4235924ae9e46b757948e4a931a55a7"
+    },
     "gh": {
       "Package": "gh",
-      "Version": "1.1.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "89ea5998938d1ad55f035c8a86f96b74"
+      "Version": "1.1.0.9001",
+      "Source": "GitHub",
+      "Remotes": "r-lib/gitcreds",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "gh",
+      "RemoteUsername": "r-lib",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "b524a442b854e9acc45fed0b0f3e5b2666fc8783",
+      "Hash": "977559d869e45c10b4e768d9187ad68a"
     },
-    "git2r": {
-      "Package": "git2r",
-      "Version": "0.27.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "531a82d1beed1f545beb25f4f5945bf7"
+    "gitcreds": {
+      "Package": "gitcreds",
+      "Version": "0.0.0.9000",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "gitcreds",
+      "RemoteUsername": "r-lib",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "fba9ed73ea6fa5efc7ad89bb4f9747b866ad8a6b",
+      "Hash": "0c67d3c46242a6d218ee344948e9a5f5"
     },
     "glue": {
       "Package": "glue",
@@ -448,10 +471,16 @@
     },
     "usethis": {
       "Package": "usethis",
-      "Version": "1.6.3",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "c541a7aed5f7fb3b487406bf92842e34"
+      "Version": "1.9.0.9000",
+      "Source": "GitHub",
+      "Remotes": "r-lib/gert, r-lib/gh, r-lib/gitcreds",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "usethis",
+      "RemoteUsername": "r-lib",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "297c9a23770af68cb7c24ffdbde277c56639ac2d",
+      "Hash": "74a5352c1a6b5a662f1efae7dc2756f5"
     },
     "utf8": {
       "Package": "utf8",
@@ -501,6 +530,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "2826c5d9efb0a88f657c7a679c7106db"
+    },
+    "zip": {
+      "Package": "zip",
+      "Version": "2.1.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "3bc8405c637d988801ec5ea88372d0c2"
     }
   }
 }

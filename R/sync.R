@@ -3,11 +3,19 @@
 #' Interactively set the folder to sync. That info will be recorder in `.labor_destination` in the parental directory
 #'
 #' @export
-set_sync_lab <-  function(){
+set_sync_lab <-  function(...){
 
-  svDialogs::dlg_message("Please set the Destination folder...")
-  destination <- svDialogs::dlg_dir()$res
+  try(
+  test <- return_dots(...), silent = TRUE
+  )
 
+  # this is used in testthat
+  if(!exists("test")){
+    svDialogs::dlg_message("Please set the Destination folder...")
+    destination <- svDialogs::dlg_dir()$res
+  } else {
+    if(test == "test_set_sync")  destination <- here::here("tests", "test_folder")
+  }
 
   destination <- paste0(check_path(destination), "/")
 
@@ -35,11 +43,15 @@ set_sync_lab <-  function(){
 #'    "none" will sync everything.
 #' @param rsync_flags flag to use wit `rsync`.  Default is `-avtuP`. Check \href{https://ss64.com/bash/rsync_options.html}{rsync page}
 #'     for the complete list of options.
+#' @param  inter if to ask to confirm interactively the destination path
 #' @details use `rsync` to sync and `here` to identify parental directory
 #' @export
-sync_lab <- function(direction = "or_de",
+sync_lab <- function(
+                        direction = "or_de",
                         exclude_files = "default",
-                        rsync_flags = "-avtuP") {
+                        rsync_flags = "-avtuP",
+                        inter = TRUE,
+                        ...) {
 
 
   # Check if rsync is installed and parameters
@@ -55,8 +67,15 @@ sync_lab <- function(direction = "or_de",
   if(!direction %in% c("or_de", "de_or", "bidir")) stop("Direction can only be `or_de`, `de_or`, `bidir`)!")
 
 
+  # this is used for testthat so that origin is set in the test
+  try(
+    origin <- return_dots(...), silent = TRUE
+  )
+
   # check if user wants to continue
-  origin <-  paste0(here::here(), "/")
+  if(!exists("origin")){
+     origin <-  paste0(here::here(), "/")
+  }
 
   destination <-  scan(here::here(".labor_destination"),
        comment.char = "#", what = "character", n = 1, quiet = TRUE)
@@ -66,9 +85,10 @@ sync_lab <- function(direction = "or_de",
   sep_mess <- paste(rep("=", nchar(mess)), collapse = "")
   message(paste0(sep_mess,"\n", mess, "\n", sep_mess ))
 
-
-  continue <- readline (prompt = "\nPress  c to cancel or anything else to continue... ")
-  if (continue == "c") stop("Sync stopped!")
+  if(inter == FALSE){
+      continue <- readline (prompt = "\nPress  c to cancel or anything else to continue... ")
+      if (continue == "c") stop("Sync stopped!")
+  }
 
 
   # file to exclude
