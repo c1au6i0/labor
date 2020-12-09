@@ -7,7 +7,9 @@
 sync_lab(
   direction = "or_de",
   exclude_files = "default",
-  rsync_flags = "-avtuP"
+  rsync_flags = "-avtuP",
+  inter = TRUE,
+  ...
 )
 }
 \arguments{
@@ -18,6 +20,8 @@ sync_lab(
 
 \item{rsync_flags}{flag to use wit \code{rsync}.  Default is \code{-avtuP}. Check \href{https://ss64.com/bash/rsync_options.html}{rsync page}
 for the complete list of options.}
+
+\item{inter}{if to ask to confirm interactively the destination path}
 }
 \description{
 sync the project folder with the local folder set by \code{set_lab_sync}. The origin is always the parental director found

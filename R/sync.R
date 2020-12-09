@@ -6,24 +6,33 @@
 set_sync_lab <-  function(...){
 
   try(
-  test <- return_dots(...), silent = TRUE
+  test <- unlist(list(...)), silent = TRUE
   )
 
-  # this is used in testthat
   if(!exists("test")){
     svDialogs::dlg_message("Please set the Destination folder...")
     destination <- svDialogs::dlg_dir()$res
-  } else {
-    if(test == "test_set_sync")  destination <- here::here("tests", "test_folder")
+    origin <- here()
   }
 
-  destination <- paste0(check_path(destination), "/")
+  # this is used in testthat
+  if(test == "test_set_sync"){
 
-  if (file.exists(here::here(".labor_destination"))) {
-    unlink(here::here(".labor_destination"))
+    folders_test <-  list("test_destination", "test_origin")
+    lapply(folders_test, dir.create)
+
+    destination_origin <- lapply(folders_test, function(x) file.path(getwd(), x))
+    names(destination_origin) <- c("destination", "origin")
+    list2env(destination_origin, environment())
+
+    }
+
+
+  if (file.exists(file.path(origin, ".labor_destination"))) {
+    unlink(file.path(origin, ".labor_destination"))
   }
 
-  sink(here::here(".labor_destination"))
+  sink(file.path(origin, ".labor_destination"))
   cat(paste0("# Destination Path for lab_sync\n", "\"", destination, "\""))
   sink()
 

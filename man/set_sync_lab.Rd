@@ -4,7 +4,7 @@
 \alias{set_sync_lab}
 \title{Set the destination of the syncing}
 \usage{
-set_sync_lab()
+set_sync_lab(...)
 }
 \description{
 Interactively set the folder to sync. That info will be recorder in \code{.labor_destination} in the parental directory
