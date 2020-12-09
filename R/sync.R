@@ -9,12 +9,11 @@ set_sync_lab <- function(...) {
     silent = TRUE
   )
 
-  if (!exists("test")) {
+  if (!is.null("test")) {
     svDialogs::dlg_message("Please set the Destination folder...")
     destination <- svDialogs::dlg_dir()$res
-    origin <- here()
+    origin <- here::here()
   } else {
-
     # this is used in testthat
     if (test == "test_set_sync") {
       folders_test <- list("test_destination", "test_origin")
@@ -94,7 +93,7 @@ sync_lab <- function(
   sep_mess <- paste(rep("=", nchar(mess)), collapse = "")
   message(paste0(sep_mess, "\n", mess, "\n", sep_mess))
 
-  if (inter == FALSE) {
+  if (inter == TRUE) {
     continue <- readline(prompt = "\nPress  c to cancel or anything else to continue... ")
     if (continue == "c") stop("Sync stopped!")
   }
