@@ -9,3 +9,4 @@ return_dots(x)
 \description{
 Returns the dots argument. Used internally for testing set_sync_lab and sync_lab
 }
+\keyword{internal}

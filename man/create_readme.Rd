@@ -2,7 +2,7 @@
 % Please edit documentation in R/lab_folders.R
 \name{create_readme}
 \alias{create_readme}
-\title{create a readme}
+\title{Create a readme.}
 \usage{
 create_readme(path, type)
 }
@@ -15,3 +15,4 @@ create_readme(path, type)
 Create readme file. If argument \code{type} is \code{data} then the file is created
 in \verb{path/data/}.
 }
+\keyword{internal}

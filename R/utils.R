@@ -4,6 +4,7 @@
 #'
 #' @param path the path of the folder to check
 #' @return the `path` if exists, otherwise it throws an Error
+#' @keywords internal
 check_path <- function(path) {
   # if slash end of path, remove it
   path <- sub("/$", "", path)
@@ -28,6 +29,7 @@ check_path <- function(path) {
 #' @param out `all_files` for a list of all files,  `summary_files` for a summary or `misplaced_files` for a list of misplaced files
 #' @return  all_files, missplaced files, or  dataframe summary
 #' @importFrom rlang .data
+#' @keywords internal
 check_files_folder <- function(path, ext, verbose = TRUE, out = "summary_files"){
 #
   # browser()
@@ -68,6 +70,7 @@ check_files_folder <- function(path, ext, verbose = TRUE, out = "summary_files")
 #' return dots
 #'
 #' Returns the dots argument. Used internally for testing set_sync_lab and sync_lab
+#' @keywords internal
 return_dots <- function(x){
   x
 }

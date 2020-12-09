@@ -2,10 +2,11 @@
 % Please edit documentation in R/lab_folders.R
 \name{labtree}
 \alias{labtree}
-\title{folder tree}
+\title{Folder tree.}
 \usage{
 labtree()
 }
 \description{
-The list of folders to create. It is used internally
+The list of folders to create. It is used internally.
 }
+\keyword{internal}

@@ -21,3 +21,4 @@ all_files, missplaced files, or  dataframe summary
 \description{
 It checks the extension of files in a folder. It also count the unexpected files.
 }
+\keyword{internal}

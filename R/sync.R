@@ -1,6 +1,6 @@
-#' Set the destination of the syncing
+#' Set the destination of the syncing.
 #'
-#' Interactively set the folder to sync. That info will be recorder in `.labor_destination` in the parental directory
+#' Interactively set the folder to sync. That info will be recorder in `.labor_destination` in the parental directory.
 #'
 #' @export
 set_sync_lab <-  function(...){
@@ -41,7 +41,7 @@ set_sync_lab <-  function(...){
 }
 
 
-#' labor sync
+#' Sync lab project.
 #'
 #' sync the project folder with the local folder set by `set_lab_sync`. The origin is always the parental director found
 #' by `here::here()`.

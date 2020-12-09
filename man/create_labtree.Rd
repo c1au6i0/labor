@@ -2,7 +2,7 @@
 % Please edit documentation in R/lab_folders.R
 \name{create_labtree}
 \alias{create_labtree}
-\title{create_labtree}
+\title{Create labtree.}
 \usage{
 create_labtree(path = here::here())
 }
@@ -11,5 +11,6 @@ create_labtree(path = here::here())
 }
 \description{
 Create the folder tree and relative documentation files. If folders are already present, it will ask
-which one to overwrite. It use the library \code{svDialogs} as interactive gui
+which one to overwrite. It use the library \code{svDialogs} as interactive gui.
 }
+\keyword{internal}

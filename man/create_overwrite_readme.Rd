@@ -2,7 +2,7 @@
 % Please edit documentation in R/lab_folders.R
 \name{create_overwrite_readme}
 \alias{create_overwrite_readme}
-\title{create or  overwrite existing readme}
+\title{Create or  overwrite existing readme.}
 \usage{
 create_overwrite_readme(path, type)
 }
@@ -14,3 +14,4 @@ create_overwrite_readme(path, type)
 \description{
 Check if README.txt exists in parent and overwrite it if user agres.
 }
+\keyword{internal}

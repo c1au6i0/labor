@@ -2,7 +2,7 @@
 % Please edit documentation in R/lab_folders.R
 \name{check_lab}
 \alias{check_lab}
-\title{cleck lab folder}
+\title{Check Lab Folder.}
 \usage{
 check_lab(path = here::here())
 }
@@ -10,5 +10,5 @@ check_lab(path = here::here())
 \item{path}{where to check (defaut is \code{here()})}
 }
 \description{
-Check if folder and file are in the right place
+Check if folder and file are in the right place.
 }

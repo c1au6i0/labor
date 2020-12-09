@@ -1,7 +1,8 @@
-#' folder tree
+#' Folder tree.
 #'
-#' The list of folders to create. It is used internally
+#' The list of folders to create. It is used internally.
 #'
+#' @keywords internal
 labtree <- function() {
   c(
     "/code",
@@ -17,13 +18,14 @@ labtree <- function() {
 
 
 
-#' create a readme
+#' Create a readme.
 #'
 #' Create readme file. If argument `type` is `data` then the file is created
 #' in `path/data/`.
 #'
 #' @param path where to create the folder
 #' @param type one of `c("data", "labtree")`
+#' @keywords internal
 create_readme <- function(path, type) {
   if (!type %in% c("data", "labtree")) {
     stop("Argument type can only be data or labtree!")
@@ -75,12 +77,13 @@ create_readme <- function(path, type) {
   }
 }
 
-#' create or  overwrite existing readme
+#' Create or  overwrite existing readme.
 #'
 #' Check if README.txt exists in parent and overwrite it if user agres.
 #'
 #' @param path the path of the parent folder to check
 #' @param  type one of `c("data", "labtree")`
+#' @keywords internal
 create_overwrite_readme <- function(path, type) {
 
   path <- check_path(path)
@@ -110,14 +113,14 @@ create_overwrite_readme <- function(path, type) {
 }
 
 
-#' create_labtree
+#' Create labtree.
 #'
 #' Create the folder tree and relative documentation files. If folders are already present, it will ask
-#' which one to overwrite. It use the library `svDialogs` as interactive gui
+#' which one to overwrite. It use the library `svDialogs` as interactive gui.
 #'
 #' @param path where to create the folder (default is `here()`)
 #' @export
-
+#' @keywords internal
 create_labtree <- function(path = here::here()) {
   folders_t <- labtree()
   full_folders_t <- paste0(path, folders_t)
@@ -180,9 +183,9 @@ create_labtree <- function(path = here::here()) {
 }
 
 
-#' remove_labtree
+#' Remove labtree.
 #'
-#' remove the folder tree and relative documentation files
+#' Femove the folder tree and relative documentation files.
 #'
 #' @param path where to create the folder (defaut is `here()`)
 #'
@@ -202,9 +205,10 @@ remove_labtree <- function(path = here::here()) {
 }
 
 
-#' cleck lab folder
+#' Check Lab Folder.
 #'
-#' Check if folder and file are in the right place
+#' Check if folder and file are in the right place.
+#'
 #' @param path where to check (defaut is `here()`)
 #' @importFrom stats na.omit
 #' @export
@@ -299,9 +303,9 @@ check_lab <- function(path = here::here()) {
 }
 
 
-#' labtree wizard
+#' Labtree wizard.
 #'
-#' Choose folders to use in the labtree
+#' Choose folders to use in the labtree.
 
 #' @param path path
 setup_labtree <- function(path = here::here()) {

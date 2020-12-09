@@ -15,3 +15,4 @@ the \code{path} if exists, otherwise it throws an Error
 \description{
 Check if the path exists.
 }
+\keyword{internal}

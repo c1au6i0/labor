@@ -2,7 +2,7 @@
 % Please edit documentation in R/sync.R
 \name{sync_lab}
 \alias{sync_lab}
-\title{labor sync}
+\title{Sync lab project.}
 \usage{
 sync_lab(
   direction = "or_de",

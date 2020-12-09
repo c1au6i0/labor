@@ -2,7 +2,7 @@
 % Please edit documentation in R/lab_folders.R
 \name{remove_labtree}
 \alias{remove_labtree}
-\title{remove_labtree}
+\title{Remove labtree.}
 \usage{
 remove_labtree(path = here::here())
 }
@@ -10,5 +10,5 @@ remove_labtree(path = here::here())
 \item{path}{where to create the folder (defaut is \code{here()})}
 }
 \description{
-remove the folder tree and relative documentation files
+Femove the folder tree and relative documentation files.
 }

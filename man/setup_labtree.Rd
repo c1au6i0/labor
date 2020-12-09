@@ -2,7 +2,7 @@
 % Please edit documentation in R/lab_folders.R
 \name{setup_labtree}
 \alias{setup_labtree}
-\title{labtree wizard}
+\title{Labtree wizard.}
 \usage{
 setup_labtree(path = here::here())
 }
@@ -10,5 +10,5 @@ setup_labtree(path = here::here())
 \item{path}{path}
 }
 \description{
-Choose folders to use in the labtree
+Choose folders to use in the labtree.
 }

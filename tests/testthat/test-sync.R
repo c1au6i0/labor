@@ -12,11 +12,4 @@ test_that("labor_destination is created", {
 unlink("test_origin", recursive = TRUE)
 unlink("test_destination", recursive = TRUE)
 
-# sync_lab(x = here::here("laboR", "data-raw"), inter = FALSE)
-#
-# expected_files <- list.files(here::here("laboR", "data-raw"))
-# actual_files <- list.files(paste0(here("laboR", "tests", "test_folder"), "/"))
-#
-# test_that("sync files", {
-#   expect_equal(actual_files, expected_files )
-# })
+

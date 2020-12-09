@@ -19,8 +19,27 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
 
-The goal of `laboR` is to keep your project folder tidy!
 
-It keeps the project folder organized, and sync with local folders.
+The goal of `{labor}` is to keep your project folder structurated, tidy and to sync it easily to local folders. 
+
+The package works only on MacOs systems.
 
 
+# Installation
+
+Download the package in a local folder and then run the following code.
+
+```{r intallation, eval=FALSE, include=TRUE}
+devtools::install_local("path_to_package")
+```
+
+Alternatively, you can install it directly from github.
+
+```{r intallation2, eval=FALSE, include=TRUE}
+library(devtools)
+devtools::install_github("c1au6i0/lavor")
+```
+
+<!-- # Usage -->
+
+<!-- ## Create a lab tree -->
