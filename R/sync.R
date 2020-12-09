@@ -3,29 +3,28 @@
 #' Interactively set the folder to sync. That info will be recorder in `.labor_destination` in the parental directory.
 #'
 #' @export
-set_sync_lab <-  function(...){
-
+set_sync_lab <- function(...) {
   try(
-  test <- unlist(list(...)), silent = TRUE
+    test <- unlist(list(...)),
+    silent = TRUE
   )
 
-  if(!exists("test")){
+  if (!exists("test")) {
     svDialogs::dlg_message("Please set the Destination folder...")
     destination <- svDialogs::dlg_dir()$res
     origin <- here()
-  }
+  } else {
 
-  # this is used in testthat
-  if(test == "test_set_sync"){
+    # this is used in testthat
+    if (test == "test_set_sync") {
+      folders_test <- list("test_destination", "test_origin")
+      lapply(folders_test, dir.create)
 
-    folders_test <-  list("test_destination", "test_origin")
-    lapply(folders_test, dir.create)
-
-    destination_origin <- lapply(folders_test, function(x) file.path(getwd(), x))
-    names(destination_origin) <- c("destination", "origin")
-    list2env(destination_origin, environment())
-
+      destination_origin <- lapply(folders_test, function(x) file.path(getwd(), x))
+      names(destination_origin) <- c("destination", "origin")
+      list2env(destination_origin, environment())
     }
+  }
 
 
   if (file.exists(file.path(origin, ".labor_destination"))) {
@@ -37,7 +36,6 @@ set_sync_lab <-  function(...){
   sink()
 
   message(cat("Destination set to ", destination, "..."))
-
 }
 
 
@@ -56,11 +54,11 @@ set_sync_lab <-  function(...){
 #' @details use `rsync` to sync and `here` to identify parental directory
 #' @export
 sync_lab <- function(
-                        direction = "or_de",
-                        exclude_files = "default",
-                        rsync_flags = "-avtuP",
-                        inter = TRUE,
-                        ...) {
+                     direction = "or_de",
+                     exclude_files = "default",
+                     rsync_flags = "-avtuP",
+                     inter = TRUE,
+                     ...) {
 
 
   # Check if rsync is installed and parameters
@@ -73,108 +71,60 @@ sync_lab <- function(
     stop("Run set_lab_sync() to setup the destination of the sync!")
   }
 
-  if(!direction %in% c("or_de", "de_or", "bidir")) stop("Direction can only be `or_de`, `de_or`, `bidir`)!")
+  if (!direction %in% c("or_de", "de_or", "bidir")) stop("Direction can only be `or_de`, `de_or`, `bidir`)!")
 
 
   # this is used for testthat so that origin is set in the test
   try(
-    origin <- return_dots(...), silent = TRUE
+    origin <- return_dots(...),
+    silent = TRUE
   )
 
   # check if user wants to continue
-  if(!exists("origin")){
-     origin <-  paste0(here::here(), "/")
+  if (!exists("origin")) {
+    origin <- paste0(here::here(), "/")
   }
 
-  destination <-  scan(here::here(".labor_destination"),
-       comment.char = "#", what = "character", n = 1, quiet = TRUE)
+  destination <- scan(here::here(".labor_destination"),
+    comment.char = "#", what = "character", n = 1, quiet = TRUE
+  )
 
   # Message
   mess <- paste0("Syncing ", origin, " to ", destination)
   sep_mess <- paste(rep("=", nchar(mess)), collapse = "")
-  message(paste0(sep_mess,"\n", mess, "\n", sep_mess ))
+  message(paste0(sep_mess, "\n", mess, "\n", sep_mess))
 
-  if(inter == FALSE){
-      continue <- readline (prompt = "\nPress  c to cancel or anything else to continue... ")
-      if (continue == "c") stop("Sync stopped!")
+  if (inter == FALSE) {
+    continue <- readline(prompt = "\nPress  c to cancel or anything else to continue... ")
+    if (continue == "c") stop("Sync stopped!")
   }
 
 
   # file to exclude
-  if (exclude_files == "default"){
-    to_exlude_files <-  c(".*", "renv/library/", "renv/python/",  "renv/staging/")
+  if (exclude_files == "default") {
+    to_exlude_files <- c(".*", "renv/library/", "renv/python/", "renv/staging/")
   }
 
   if (!exclude_files %in% c("none", "default")) {
-     to_exlude_files <- exclude_files
+    to_exlude_files <- exclude_files
   }
 
   # here the rsync command is constructed
-  if (exclude_files == "none"){
-    to_exclude <-  " "
+  if (exclude_files == "none") {
+    to_exclude <- " "
   } else {
-    to_exclude <- paste0("--exclude " , "\"", to_exlude_files, "\"", collapse = " ")
+    to_exclude <- paste0("--exclude ", "\"", to_exlude_files, "\"", collapse = " ")
   }
 
   rsync_comand <- paste0("rsync ", rsync_flags)
 
   if (direction %in% c("or_de", "bidir")) {
-    all_comand <-  paste(rsync_comand, " ", to_exclude, " \"", origin, "\" ", "\"", destination, "\"", sep = "")
+    all_comand <- paste(rsync_comand, " ", to_exclude, " \"", origin, "\" ", "\"", destination, "\"", sep = "")
     system(all_comand)
   }
 
   if (direction %in% c("de_or", "bidir")) {
-    all_comand <-  paste(rsync_comand, " ", to_exclude, " \"", destination, "\" ", "\"", origin, "\"", sep = "")
+    all_comand <- paste(rsync_comand, " ", to_exclude, " \"", destination, "\" ", "\"", origin, "\"", sep = "")
     system(all_comand)
   }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
