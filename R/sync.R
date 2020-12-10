@@ -50,6 +50,7 @@ set_sync_lab <- function(...) {
 #' @param rsync_flags flag to use wit `rsync`.  Default is `-avtuP`. Check \href{https://ss64.com/bash/rsync_options.html}{rsync page}
 #'     for the complete list of options.
 #' @param  inter if to ask to confirm interactively the destination path
+#' @param ... used internally
 #' @details use `rsync` to sync and `here` to identify parental directory
 #' @export
 sync_lab <- function(
