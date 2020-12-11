@@ -13,7 +13,7 @@ sync_lab(
 )
 }
 \arguments{
-\item{direction}{one of \verb{c("or_de", "de_or", "bidir") meaning }origin to destination\verb{, }destination to origin\code{or}bidirectional\verb{. Defalut is }or_de`.}
+\item{direction}{one of \verb{c("or_de", "de_or", "bidir") meaning origin to destination, destination to origin or bidirectional. Defalut is }or_de`.}
 
 \item{exclude_files}{list of files to exclude. If "default", it will  not sync hidden files in parent as well as  folders in \code{renv}. If
 "none" will sync everything.}
@@ -22,6 +22,8 @@ sync_lab(
 for the complete list of options.}
 
 \item{inter}{if to ask to confirm interactively the destination path}
+
+\item{...}{used internally}
 }
 \description{
 sync the project folder with the local folder set by \code{set_lab_sync}. The origin is always the parental director found

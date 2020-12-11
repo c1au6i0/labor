@@ -1,7 +1,7 @@
 #' Set the destination of the syncing.
 #'
 #' Interactively set the folder to sync. That info will be recorder in `.labor_destination` in the parental directory.
-#'
+#' @param ... used internally for testing.
 #' @export
 set_sync_lab <- function(...) {
   try(
@@ -12,6 +12,11 @@ set_sync_lab <- function(...) {
   if (!is.null("test")) {
     svDialogs::dlg_message("Please set the Destination folder...")
     destination <- svDialogs::dlg_dir()$res
+
+    if(length(destination) == 0){
+      stop("You have to select a destination folder!")
+    }
+
     origin <- here::here()
   } else {
     # this is used in testthat
@@ -43,8 +48,8 @@ set_sync_lab <- function(...) {
 #' sync the project folder with the local folder set by `set_lab_sync`. The origin is always the parental director found
 #' by `here::here()`.
 #'
-#' @param direction one of `c("or_de", "de_or", "bidir") meaning `origin to destination`, `destination to origin` or
-#'      `bidirectional`. Defalut is `or_de`.
+#' @param direction one of `c("or_de", "de_or", "bidir") meaning origin to destination, destination to origin or
+#'      bidirectional. Defalut is `or_de`.
 #' @param exclude_files list of files to exclude. If "default", it will  not sync hidden files in parent as well as  folders in `renv`. If
 #'    "none" will sync everything.
 #' @param rsync_flags flag to use wit `rsync`.  Default is `-avtuP`. Check \href{https://ss64.com/bash/rsync_options.html}{rsync page}

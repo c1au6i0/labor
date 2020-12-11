@@ -6,6 +6,9 @@
 \usage{
 set_sync_lab(...)
 }
+\arguments{
+\item{...}{used internally for testing.}
+}
 \description{
 Interactively set the folder to sync. That info will be recorder in \code{.labor_destination} in the parental directory.
 }
