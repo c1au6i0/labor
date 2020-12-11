@@ -62,17 +62,16 @@ Then run `sync_lab` to sync the project directory.
 
 ![](inst/gifs_readme/sync.gif)
 
-<span style="color:red; font-weight:bold;"> Convinient things about
-`lab_sync` </span> :
+**Convenient things about `lab_sync` :**
 
-1.  No need to retype origin and destination everytime in `rsync`.
+1.  No need to retype origin and destination every time in `rsync`.
 2.  Files containing authentication information and `renv` packages are
     not synced. You can use `exclude_files` to decide to not sync other
     specific files.
-3.  You can bidirectianl sync the folders setting the argument
+3.  You can bidirectional sync the folders setting the argument
     `direction`
 4.  You can still decide to use any `rsync` flags setting the argument
-    `rsync_flags` (default is `-avtuP`)
+    `rsync_flags` (default is `-avtuP`).
 
 ## Are you keeping things in the right place?
 
@@ -80,5 +79,5 @@ Run `check_lab` to see if you have messy directories.
 
 ![](inst/gifs_readme/check_folder.gif)
 
-The report generated, indicates the absolute and over the total number
-of files missplaced. It also lists the misplaced files.
+The report generated indicates the absolute and over the total number of
+files misplaced and it lists them.
