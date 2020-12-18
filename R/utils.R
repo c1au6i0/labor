@@ -63,9 +63,6 @@ check_files_folder <- function(path, ext, verbose = TRUE, out = "summary_files")
   get(out)
 }
 
-
-
-
 #' return dots
 #'
 #' Returns the dots argument. Used internally for testing set_sync_lab and sync_lab
@@ -73,3 +70,62 @@ check_files_folder <- function(path, ext, verbose = TRUE, out = "summary_files")
 return_dots <- function(x) {
   x
 }
+
+
+#' Remove DS Stores
+#'
+#' Remove `.DS_Store` files and modify .git_ignore to avoid tracking of those files. Based on
+#' \href{https://stackoverflow.com/questions/107701/how-can-i-remove-ds-store-files-from-a-git-repository}{this post.}:
+#'
+#' @export
+#
+remove_DS_Store <- function(){
+
+  system("find . -name .DS_Store -print0 | xargs -0 git rm -f --ignore-unmatch")
+
+  files_here <- list.files(here::here(), all.files = TRUE)
+
+  if(!".gitignore" %in% files_here){
+    stop("Initiate git launching git init in the terminal!")
+  }
+
+  git_ignore <- scan(here::here(".gitignore"), what = "character", quiet = TRUE)
+
+  if(".DS_Store" %in% git_ignore){
+    message(".DS_Store already in .gitignore!")
+  } else {
+    message(".gitignore has been updated!")
+    write(".DS_Store", here::here(".gitignore"), append = TRUE)
+  }
+
+  message("\n.DS_store files removed!")
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

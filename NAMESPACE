@@ -2,6 +2,7 @@
 
 export(check_lab)
 export(create_labtree)
+export(remove_DS_Store)
 export(remove_labtree)
 export(set_sync_lab)
 export(sync_lab)
