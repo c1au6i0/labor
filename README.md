@@ -38,11 +38,11 @@ To set up your lab folder, start running `create_labtree`.
 
 ![](inst/gifs_readme/create_labtree.gif)
 
-The function generates the folder structure generally used for projects
-in our lab, and relative `README` files
+The function generates the folder structure used for projects in our
+lab, and relative `README` files.
 
-You can run the function multiple types and you will be prompt to decide
-if overwrite or not particular folders.
+If you run the function multiple types, you will be prompt to decide if
+overwrite or not particular folders.
 
 ![](inst/gifs_readme/create_labfolder2.gif)
 
@@ -50,15 +50,15 @@ Use `remove_labtree` to remove the folders just created.
 
 ## Sync with local folder
 
-Under the hood, the package `{labor}` use `rsync` to sync folders Set up
-the destination folder using `set_sync_lab`
+Under the hood, the package `{labor}` use `rsync` to sync local folders.
+Set up the destination folder using `set_sync_lab`
 
 ![](inst/gifs_readme/set_destination.gif)
 
-The destination folder is saved in a file file in the project directory
-`.labor_destination`.
+The destination folder is saved (`.labor_destination`) in a file in the
+project directory .
 
-Then run `sync_lab` to sync the project directory.
+Then run `sync_lab` to sync the project folder with the destination.
 
 ![](inst/gifs_readme/sync.gif)
 
@@ -68,10 +68,10 @@ Then run `sync_lab` to sync the project directory.
 2.  Files containing authentication information and `renv` packages are
     not synced. You can use `exclude_files` to decide to not sync other
     specific files.
-3.  You can bidirectional sync the folders setting the argument
+3.  You can bidirectional sync the folders by setting the argument
     `direction`
-4.  You can still decide to use any `rsync` flags setting the argument
-    `rsync_flags` (default is `-avtuP`).
+4.  You can still decide to use any `rsync` flags by setting the
+    argument `rsync_flags` (default is `-avtuP`).
 
 ## Are you keeping things in the right place?
 
