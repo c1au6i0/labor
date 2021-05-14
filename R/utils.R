@@ -95,7 +95,7 @@ remove_DS_Store <- function(){
     message(".DS_Store already in .gitignore!")
   } else {
     message(".gitignore has been updated!")
-    write(".DS_Store", here::here(".gitignore"), append = TRUE)
+    cat(".DS_Store", file = here::here(".gitignore"), append = TRUE, sep = "\n")
   }
 
   message("\n.DS_store files removed!")

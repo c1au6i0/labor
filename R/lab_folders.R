@@ -8,7 +8,7 @@ labtree <- function() {
     "/code",
     "/data",
     "/documents",
-    "/figs",
+    "/figs_tabs",
     "/manuscripts",
     "/misc",
     "/objs",

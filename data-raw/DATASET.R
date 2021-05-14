@@ -21,7 +21,7 @@ for (x in folder_lab) {
 }
 
 row.names(folder_ext) <- NULL
-names(folder_ext) <- c("code", "data", "documents", "figs", "manuscripts", "objs", "reports")
+names(folder_ext) <- c("code", "data", "documents", "figs_tabs", "manuscripts", "objs", "reports")
 
 
 usethis::use_data(folder_ext, internal = TRUE, overwrite = TRUE)
