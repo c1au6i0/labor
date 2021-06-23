@@ -26,7 +26,6 @@ devtools::install_local("path_to_package")
 Alternatively, you can install it directly from github.
 
 ``` r
-library(devtools)
 devtools::install_github("c1au6i0/labor")
 ```
 
