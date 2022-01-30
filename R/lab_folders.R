@@ -315,3 +315,35 @@ setup_labtree <- function(path = here::here()) {
   folders_stripted <- unlist(strsplit(folders_user, ","))
   folders_cl <- unique(c(gsub("[[:punct:]]|\\s", "", folders_stripted), "data"))
 }
+
+
+
+
+#' set up project
+#'
+#' Install some packages commonly used and create the project structure.
+#'
+#' @param use_targets If TRUE creates target scripts and
+#' @export
+setup_lab_project <- function(use_targets = FALSE){
+  pak::pkg_install(pkg = c(
+                           "devtools",
+                           "here",
+                           "pak",
+                           "renv",
+                           "targets",
+                           "tidyverse",
+                           "usethis")
+                   )
+  remove_DS_Store()
+  create_labtree()
+  unlink(here::here("README"))
+  unlink(here::here("code"," README"))
+
+  if(use_targets){
+      targets::tar_script()
+      dir.create(here::here("code", "targets_functions"))
+  }
+
+
+}
