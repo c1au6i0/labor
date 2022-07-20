@@ -1,0 +1,41 @@
+---
+title: "Exploration"
+author: "Claudio Zanettini|Marchionni Lab"
+date:  "`r Sys.Date()`"
+output: 
+    html_document:
+          toc: true
+          toc_depth: 3
+          df_print: kable
+          theme: paper
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, 
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.align = "center",
+                      fig.width = 15,
+                      fig.height = 14
+                      )
+```
+
+```{r}
+library(here)
+library(targets)
+library(tidyverse)
+library(janitor)
+theme_set(theme_bw())
+source(here("code", "targets_functions", "functions.R"))
+```
+
+```{r}
+tar_config_set(store = here("_targets"))
+```
+
+
+
+
+
+
+

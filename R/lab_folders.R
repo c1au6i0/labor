@@ -343,7 +343,25 @@ setup_lab_project <- function(use_targets = FALSE){
   if(use_targets){
       targets::tar_script()
       dir.create(here::here("code", "targets_functions"))
+
+      file.copy(from = file.path(.libPaths(), "labor", "functions.R")[1],
+                to = here::here("code", "targets_functions")
+                )
+
+      file.copy(from = file.path(.libPaths(), "labor", "README.Rmd")[1],
+                to = here::here()
+                )
+
+      file.copy(from = file.path(.libPaths(), "labor", "_targets.R")[1],
+                to = here::here()
+                )
+
+      file.copy(from = file.path(.libPaths(), "labor", "exploring.Rmd")[1],
+                to = here::here("reports")
+                )
   }
 
-
 }
+
+
+
