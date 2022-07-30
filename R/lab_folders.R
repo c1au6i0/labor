@@ -335,7 +335,7 @@ setup_lab_project <- function(use_targets = FALSE){
                            "tidyverse",
                            "usethis")
                    )
-  remove_DS_Store()
+  lapply(c(".DS_Store", "._.DS_Store"), remove_file)
   create_labtree()
   unlink(here::here("README"))
   unlink(here::here("code"," README"))

@@ -72,16 +72,18 @@ return_dots <- function(x) {
 }
 
 
-#' Remove DS Stores
+#' Remove File
+#'
+#' Function that remove file and added it to .gitignore
 #'
 #' Remove `.DS_Store` files and modify .git_ignore to avoid tracking of those files. Based on
 #' \href{https://stackoverflow.com/questions/107701/how-can-i-remove-ds-store-files-from-a-git-repository}{this post.}:
 #'
 #' @export
 #
-remove_DS_Store <- function(){
+remove_file <- function(file_name){
 
-  system("find . -name .DS_Store -print0 | xargs -0 git rm -f --ignore-unmatch")
+  system("find . -name ", file_name, " -print0 | xargs -0 git rm -f --ignore-unmatch")
 
   files_here <- list.files(here::here(), all.files = TRUE)
 
@@ -91,14 +93,14 @@ remove_DS_Store <- function(){
 
   git_ignore <- scan(here::here(".gitignore"), what = "character", quiet = TRUE)
 
-  if(".DS_Store" %in% git_ignore){
-    message(".DS_Store already in .gitignore!")
+  if(file_name %in% git_ignore){
+    message(paste0(file_name, " already in .gitignore!"))
   } else {
     message(".gitignore has been updated!")
-    cat(".DS_Store", file = here::here(".gitignore"), append = TRUE, sep = "\n")
+    cat(file_name, file = here::here(".gitignore"), append = TRUE, sep = "\n")
   }
 
-  message("\n.DS_store files removed!")
+  message(paste0("\n",file_name, "files removed!"))
 
 }
 

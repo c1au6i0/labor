@@ -1,4 +1,3 @@
-library(targets)
 # _targets.R
 
 library(targets)
@@ -25,6 +24,11 @@ tar_option_set(
 
 
 list(
+  # tar_file_read(
+  #   file_to_import,
+  #   here::here("data", "..."),
+  #   readxl::read_xlsx(path = !!.x)
+  # ),
 
 
 )
