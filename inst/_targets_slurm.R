@@ -19,7 +19,9 @@ tar_option_set(
     "openxlsx"
   ),
   workspace_on_error = TRUE,
+  storage = "worker",
   garbage_collection = TRUE,
+  retrieval = "worker",
   memory = "transient"
 )
 

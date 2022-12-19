@@ -10,7 +10,7 @@ check_path(path)
 \item{path}{the path of the folder to check}
 }
 \value{
-the \code{path} if exists, otherwise it throws an Error
+the \code{path} if exists, otherwise it throws an error
 }
 \description{
 Check if the path exists.

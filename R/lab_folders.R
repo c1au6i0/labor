@@ -5,110 +5,17 @@
 #' @keywords internal
 labtree <- function() {
   c(
-    "/code",
-    "/data",
-    "/documents",
-    "/figs_tabs",
-    "/manuscripts",
-    "/misc",
-    "/objs",
-    "/reports"
+    "code",
+    "data",
+    "documents",
+    "figs_tabs",
+    "manuscripts",
+    "misc",
+    "objs",
+    "reports"
   )
 }
 
-
-
-#' Create a readme.
-#'
-#' Create readme file. If argument `type` is `data` then the file is created
-#' in `path/data/`.
-#'
-#' @param path where to create the folder
-#' @param type one of `c("data", "labtree")`
-#' @keywords internal
-create_readme <- function(path, type) {
-  if (!type %in% c("data", "labtree")) {
-    stop("Argument type can only be data or labtree!")
-  }
-
-
-  path <- check_path(path)
-
-  if (type == "data") {
-    path <- check_path(paste0(path, "/data"))
-    output <- paste0(path, "/README")
-    sink(output)
-    cat("Datasets:")
-    sink()
-    message("Readme created in data directory!")
-  }
-
-  if (type == "labtree") {
-    output <- paste0(path, "/README")
-    file_conn <- file(output)
-    writeLines(
-      c(
-        "Directory Structure:",
-        "code:",
-        "  Source code for the analysis.",
-        "data:",
-        " Data for the project.",
-        "data:",
-        "  Raw Data",
-        "documents:",
-        "  External documents like papers, tutorial.",
-        "figs:",
-        "  Figures.",
-        "objs:",
-        "  RDA and RDS files of analyses, and intermediate objects",
-        "manuscripts:",
-        "  Manuscripts",
-        "misc:",
-        "  Anything that does not fit in the other categories",
-        "reports:",
-        "   Reports, text files, markdown, ppt.",
-        "",
-        "Please add a brief explanation to this README file for any directory you may add"
-      ),
-      file_conn
-    )
-    close(file_conn)
-    message("Readme created in parental directory!")
-  }
-}
-
-#' Create or  overwrite existing readme.
-#'
-#' Check if README.txt exists in parent and overwrite it if user agres.
-#'
-#' @param path the path of the parent folder to check
-#' @param  type one of `c("data", "labtree")`
-#' @keywords internal
-create_overwrite_readme <- function(path, type) {
-  path <- check_path(path)
-
-  if (!type %in% c("data", "labtree")) {
-    stop("Argument type can only be data or labtree!")
-  }
-
-  if (type == "labtree") {
-    if (file.exists(paste0(path, "/README"))) {
-      over_readme <- svDialogs::dlg_message("There is already a readme in parent folder!\nDo you want to overwrite it?", type = "yesno")$res
-      if (over_readme == "yes") create_readme(path, "labtree")
-    } else {
-      create_readme(path, "labtree")
-    }
-  }
-
-  if (type == "data") {
-    if (file.exists(paste0(path, "data/README"))) {
-      over_readme <- svDialogs::dlg_message("There is already a readme!\nDo you want to overwrite it?", type = "yesno")$res
-      if (over_readme == "yes") create_readme(path, "data")
-    } else {
-      create_readme(path, "data")
-    }
-  }
-}
 
 
 #' Create labtree.
@@ -116,34 +23,28 @@ create_overwrite_readme <- function(path, type) {
 #' Create the folder tree and relative documentation files. If folders are already present, it will ask
 #' which one to overwrite. It use the library `svDialogs` as interactive gui.
 #'
-#' @param path where to create the folder (default is `here()`)
+#' @param path Where to create the folder (default is `here()`).
+#' @param interative Boolean. If folder of the project is not empty, and interactive is `TRUE`, it will open `svDialogs` to
+#' ask user to choose folders to overwrite.
 #' @export
 #' @keywords internal
-create_labtree <- function(path = here::here()) {
+create_labtree <- function(path_project = here::here(), interactive = TRUE) {
+
+  check_path(path_project)
   folders_t <- labtree()
-  full_folders_t <- paste0(path, folders_t)
+  full_folders_t <- file.path(path_project, folders_t)
 
   # folder is not empty--------------------------------------------
-  # ADD IF THERE IS A README ALONE
   already_there <- unlist(lapply(full_folders_t, dir.exists))
-  if (sum(already_there) > 0) {
-
+  if (any(already_there)) {
     # create new folders
+
+    if (!interactive) stop("The folder is not empty!")
+
     to_create <- full_folders_t[!already_there]
 
 
     lapply(to_create, dir.create)
-
-    # if among the folder to write there is data we have to create a readme
-    if (length(grep("*data$", to_create)) > 0) {
-      create_readme(paste0(path), type = "data")
-    }
-
-    message("New folders created!\n")
-
-    # Overwrite readme in parent
-    create_overwrite_readme(path, "labtree")
-
 
     # choose the destiny of the others
     resp <- svDialogs::dlg_list(
@@ -161,19 +62,12 @@ create_labtree <- function(path = here::here()) {
       unlink(resp, recursive = TRUE)
       lapply(resp, dir.create)
 
-      # if among the folder to overwrite there is data we have to create a readme
-      if (length(grep("*data$", resp)) > 0) {
-        create_readme(path, type = "data")
-      }
 
       message("Folders overwrote!\n")
     }
   } else {
-    # Overwrite readme in parent
-    create_overwrite_readme(path, "labtree")
 
-    lapply(paste0(path, folders_t), dir.create)
-    create_readme(path = path, type = "data")
+    lapply(file.path(path_project, folders_t), dir.create)
   }
 
   message("Da da! All done!")
@@ -187,181 +81,110 @@ create_labtree <- function(path = here::here()) {
 #' @param path where to create the folder (defaut is `here()`)
 #'
 #' @export
-remove_labtree <- function(path = here::here()) {
-  path <- check_path(path)
+remove_labtree <- function(project_oath = here::here()) {
+  project <- check_path(project_path)
 
   folders_t <- labtree()
-  full_folders_t <- paste0(path, folders_t)
+  full_folders_t <- paste0(project_path, folders_t)
   unlink(full_folders_t, recursive = TRUE)
-
-  unlink(paste0(path, "/README"))
 
   message("Folders and readme removed!\n")
 }
 
 
-#' Check Lab Folder.
+
+
+#' labtree wizard.
+#' #'
+#' #' Choose folders to use in the labtree.
 #'
-#' Check if folder and file are in the right place.
+#' #' @param path path
+#' setup_labtree <- function(project_path = here::here()) {
+#'   # we add data by default.
 #'
-#' @param path where to check (defaut is `here()`)
-#' @importFrom stats na.omit
-#' @export
-check_lab <- function(path = here::here()) {
-  path <- check_path(path)
-
-  # check if all folders are OK in parental
-  folders_lab <- list.dirs(path, recursive = FALSE, full.names = FALSE)
-  folders_lab <- grep("^[^.]", folders_lab, value = TRUE)
-  expected_lab <- c(sub("/", "", labtree()), "renv")
-
-  # Check folders in parent -------
-  folders_excess <- folders_lab[!folders_lab %in% expected_lab]
-  folders_missing <- expected_lab[!expected_lab %in% folders_lab]
-
-  message("Analyzing labtree ---------------------------\n")
-  summary_folders <- data.frame(
-    "folders" = c("excess", "missing"),
-    "tot" = unlist(lapply(list(folders_excess, folders_missing), length))
-  )
-
-  message("\nSummary of folders:")
-  print(knitr::kable(summary_folders, align = "c", row.names = FALSE))
-
-  if (length(folders_excess) > 0) {
-    print(knitr::kable(as.data.frame(folders_excess), align = "c", row.names = FALSE))
-  }
-
-  if (length(folders_excess) > 0) {
-    print(knitr::kable(as.data.frame(folders_missing), align = "c", row.names = FALSE))
-  }
-
-
-  # Check files in parents no hidden ------------
-  files_folders_parent <- list.files(path, all.files = FALSE, include.dirs = FALSE)
-  files_parent <- files_folders_parent[!files_folders_parent %in% folders_lab]
-
-  # If files are Rproj or renv_lock thats fine
-  files_parent_excess <- files_parent[!files_parent %in% grep("Rproj$|lock", files_parent, perl = TRUE, value = TRUE)]
-
-  # misc by definition can have everything
-  folders_to_check <- expected_lab[!expected_lab %in% c(folders_missing, "renv", "misc")]
-
-  # check_files_folder(file.path(path, folders_to_check[1]), folder_ext[, names(folder_ext) %in% c("code")])
-
-  if (length(folders_to_check) == 0) {
-    message("There are no folder that can be checked! Run create_labtree to create folders!")
-  }
-
-  message("\nAnalyzing  files in labtree -----------------\n")
-  if (length(folders_to_check) == 0) {
-    message("There are no folder that can be checked! Run create_labtree to create folders!")
-  }
-
-  if (length(folders_to_check) == 1) {
-    all_summary <- check_files_folder(file.path(path, folders_to_check), folder_ext[, names(folder_ext) %in% folders_to_check])
-    misplace_files <- check_files_folder(
-      file.path(path, folders_to_check),
-      folder_ext[, names(folder_ext) %in% folders_to_check],
-      out = "misplaced_files",
-      verbose = FALSE
-    )
-  }
-
-  if (length(folders_to_check) > 1) {
-    all_summary_list <- as.data.frame(mapply(
-      check_files_folder,
-      file.path(path, folders_to_check),
-      folder_ext[, names(folder_ext) %in% folders_to_check]
-    ))
-
-    all_summary <- do.call(rbind, all_summary_list)
-
-    misplace_files_list <- mapply(check_files_folder,
-      file.path(path, folders_to_check),
-      folder_ext[, names(folder_ext) %in% folders_to_check],
-      out = "misplaced_files",
-      SIMPLIFY = FALSE
-    )
-
-    misplace_files <- do.call(rbind, misplace_files_list)
-    misplace_files <- na.omit(misplace_files)
-  }
-
-  message("\nSummary of files:")
-  print(knitr::kable(all_summary, row.names = FALSE, align = "c"))
-
-  if (nrow(misplace_files) > 0) {
-    message("\nMisplaced files:")
-    print(knitr::kable(misplace_files, align = c("l", "c", "c"), row.names = FALSE))
-  } else {
-    cat("\nVery good! No misplaced files!")
-  }
-}
-
-
-#' Labtree wizard.
+#'   # do you want to use the defaul labtree?
 #'
-#' Choose folders to use in the labtree.
-
-#' @param path path
-setup_labtree <- function(path = here::here()) {
-
-  # we add data by default.
-
-  # do you want to use the defaul labtree?
-
-  folders_user <- svDialogs::dlg_input("Insert the name of folders separated by comma and without quotes")$res
-  folders_stripted <- unlist(strsplit(folders_user, ","))
-  folders_cl <- unique(c(gsub("[[:punct:]]|\\s", "", folders_stripted), "data"))
-}
+#'   folders_user <- svDialogs::dlg_input("Insert the name of folders separated by comma and without quotes")$res
+#'   folders_stripted <- unlist(strsplit(folders_user, ","))
+#'   folders_cl <- unique(c(gsub("[[:punct:]]|\\s", "", folders_stripted), "data"))
+#' }
 
 
 
 
 #' set up project
 #'
-#' Install some packages commonly used and create the project structure.
+#' Install some packages commonly used, initiate `renv` and create the project structure.
 #'
-#' @param use_targets If TRUE creates target scripts and
+#' @param use_targets If FALSE, do not use targets. If "local" install targets packages, add `_target.R` and `function.R` files
+#'  , and update `README.Rmd`. If "cluster" add other config files for use with `slurm` and update `README.Rmd` accordingly.
+#' @param path_project
+#' @param pkg_to_install A vector of packages to install.
+#' @param proj_name If `use_targets = "cluster"`, name of the project. Used to rename file.Rprj
+#' @param use_python If TRUE launch `renv::use_python()`
 #' @export
-setup_lab_project <- function(use_targets = FALSE){
-  pak::pkg_install(pkg = c(
-                           "devtools",
-                           "here",
-                           "pak",
-                           "renv",
-                           "targets",
-                           "tidyverse",
-                           "usethis")
-                   )
-  lapply(c(".DS_Store", "._.DS_Store"), remove_file)
+setup_lab_project <- function(use_targets = FALSE,
+                              path_project = here::here(),
+                              pkg_to_install = c("devtools", "here", "reticulate", "tidyverse", "usethis"),
+                              files_git_rm = c(".DS_Store", "._.DS_Store", "._.*"),
+                              proj_name,
+                              use_python = TRUE
+                              ) {
+
+  # cli::cli_h1("Setting up renv...")
+
+  install.packages("renv")
+  renv::init(bioconductor = TRUE)
+
+  if(use_python) renv::use_python()
+  # cli_alert_success("renv installed an ready")
+
+  # cli::cli_h1("Installing packages...")
+  renv::install(c("devtools", "here", "reticulate", "tidyverse", "usethis"))
+
+
+  lapply(files_git_rm, remove_file)
+
   create_labtree()
-  unlink(here::here("README"))
-  unlink(here::here("code"," README"))
 
-  if(use_targets){
-      targets::tar_script()
-      dir.create(here::here("code", "targets_functions"))
+  if (use_targets %in% c("local", "cluster")) {
+    targets::tar_script()
 
-      file.copy(from = file.path(.libPaths(), "labor", "functions.R")[1],
-                to = here::here("code", "targets_functions")
-                )
+    dir.create(here::here("code", "targets_functions"))
 
-      file.copy(from = file.path(.libPaths(), "labor", "README.Rmd")[1],
-                to = here::here()
-                )
+    retrive_copy_files_package(c("README.Rmd", "_targets.R"), folder_out )
+    files_to_parent <- lapply(c("README.Rmd", "_targets.R"), retrive_file_package)
 
-      file.copy(from = file.path(.libPaths(), "labor", "_targets.R")[1],
-                to = here::here()
-                )
+    file.copy(from = files_to_parent, to = here::here())
 
-      file.copy(from = file.path(.libPaths(), "labor", "exploring.Rmd")[1],
-                to = here::here("reports")
-                )
+    file.copy(
+      from = retrive_file_package("functions.R"),
+      to = here::here("code", "targets_functions")
+    )
   }
 
+  if (use_targets == "cluster") {
+
+    lapply(c("README.Rmd", "_targets.R"), unlink)
+
+    files_to_copy <- c(
+      "_start_targets.sh",
+      "_targets_resources.conf.R",
+      "_targets_slurm.R",
+      "batchtools.slurm.tmpl",
+      "project_name.Rproj",
+      "README_cluster_target.Rmd"
+      )
+
+
+    retrive_copy_files_pkg(file_names = files_to_copy, folder_out = path_project)
+
+    before_rename <- fs::path(path_folder, c("README_cluster_target.Rmd", "_targets_resources.conf.R", "project_name.Rproj"))
+    after_rename <- fs::path(path_folder, c("README.Rmd", "_targets.R", paste0(proj_name, ".Rproj")))
+
+    fs::file_move(before_rename, after_rename)
+
+
+
+  }
 }
-
-
-

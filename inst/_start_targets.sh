@@ -11,4 +11,4 @@
 #SBATCH --mail-type=ALL
 
 echo   $(date)
-R -e "targets::tar_make_future(workers = 5)"
+R -e "targets::tar_make_future(workers = 10)"
