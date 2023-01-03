@@ -13,6 +13,7 @@ RoxygenNote: 7.2.1
 Imports: 
     cli,
     fs,
+    git2r,
     here (>= 0.1),
     svDialogs (>= 1.0.2),
     tidyr (>= 1.1.0),
@@ -20,7 +21,8 @@ Imports:
     knitr (>= 1.28),
     dplyr (>= 1.0.2),
     rlang,
-    targets
+    targets,
+    usethis
 Remotes: 
     SciViews/svDialogs
 Depends: 

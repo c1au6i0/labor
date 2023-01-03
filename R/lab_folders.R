@@ -55,7 +55,7 @@ create_labtree <- function(path_project = here::here(), interactive = TRUE) {
 
     # do what you have been told
     if (length(resp) == 0) {
-      stop("Nothing to do here then!")
+      message("Nothing to do here then!")
 
       # Overwrite
     } else {
@@ -122,45 +122,42 @@ remove_labtree <- function(project_oath = here::here()) {
 #' @param pkg_to_install A vector of packages to install.
 #' @param proj_name If `use_targets = "cluster"`, name of the project. Used to rename file.Rprj
 #' @param use_python If TRUE launch `renv::use_python()`
+#' @param use_git If TRUE install git
 #' @export
-setup_lab_project <- function(use_targets = FALSE,
+setup_lab_project <- function(
                               path_project = here::here(),
-                              pkg_to_install = c("devtools", "here", "reticulate", "tidyverse", "usethis"),
+                              use_targets = FALSE,
+                              pkg_to_install = c("BiocManager","devtools", "here", "lintr", "languageserver", "renv", "targets", "tidyverse", "usethis"),
                               files_git_rm = c(".DS_Store", "._.DS_Store", "._.*"),
-                              proj_name,
-                              use_python = TRUE
+                              use_python = TRUE,
+                              use_git = TRUE
                               ) {
 
+
+
+  if (!file.exists(path_project)) {
+    dir.create(path_project)
+  }
+
   # cli::cli_h1("Setting up renv...")
-
-  install.packages("renv")
-  renv::init(bioconductor = TRUE)
-
-  if(use_python) renv::use_python()
-  # cli_alert_success("renv installed an ready")
-
-  # cli::cli_h1("Installing packages...")
-  renv::install(c("devtools", "here", "reticulate", "tidyverse", "usethis"))
+  usethis::create_project(path = path_project, open = FALSE)
+  install.packages(c("renv", "BiocManager"))
+  renv::install("c1au6i0/labor")
+  renv::install(project = path_project, packages =  pkg_to_install, prompt = FALSE)
+  renv::init(project = path_project, bioconductor = TRUE, restart = FALSE)
+  renv::activate(project = path_project)
+  renv::snapshot(project = path_project)
 
 
-  lapply(files_git_rm, remove_file)
+  create_labtree(path_project = path_project)
 
-  create_labtree()
-
+  # cli::cli_h1("Coping files...")
   if (use_targets %in% c("local", "cluster")) {
-    targets::tar_script()
 
-    dir.create(here::here("code", "targets_functions"))
+    dir.create(fs::path(path_project,"code", "targets_functions"))
+    retrive_copy_files_pkg(c("README.Rmd", "_targets.R"), folder_out = path_project)
+    retrive_copy_files_pkg("functions.R", fs::path(path_project, "code", "targets_functions"))
 
-    retrive_copy_files_package(c("README.Rmd", "_targets.R"), folder_out )
-    files_to_parent <- lapply(c("README.Rmd", "_targets.R"), retrive_file_package)
-
-    file.copy(from = files_to_parent, to = here::here())
-
-    file.copy(
-      from = retrive_file_package("functions.R"),
-      to = here::here("code", "targets_functions")
-    )
   }
 
   if (use_targets == "cluster") {
@@ -174,17 +171,36 @@ setup_lab_project <- function(use_targets = FALSE,
       "batchtools.slurm.tmpl",
       "project_name.Rproj",
       "README_cluster_target.Rmd"
-      )
-
+    )
 
     retrive_copy_files_pkg(file_names = files_to_copy, folder_out = path_project)
-
-    before_rename <- fs::path(path_folder, c("README_cluster_target.Rmd", "_targets_resources.conf.R", "project_name.Rproj"))
-    after_rename <- fs::path(path_folder, c("README.Rmd", "_targets.R", paste0(proj_name, ".Rproj")))
-
+    before_rename <- fs::path(path_project, c("README_cluster_target.Rmd", "_targets_resources.conf.R"))
+    after_rename <- fs::path(path_project, c("README.Rmd", "_targets.R"))
     fs::file_move(before_rename, after_rename)
+  }
 
 
+  # cli::cli_h1("Setting up git...")
+  if (use_git) {
+        git2r::init(path_project)
+        lapply(files_git_rm, remove_file, path_to_look = path_project) # remove annoying files
 
   }
+
+
+
+ # cli::cli_h1("Setting up git...")
+  if(use_python) {
+    # https://stackoverflow.com/questions/51585149/cant-figure-out-how-to-use-conda-environment-after-reticulateuse-condaenvpat
+    system("conda ")
+    renv::install("reticulate")
+    renv::use_python(project = path_project, type = "virtualenv")
+    reticulate::conda_install(envname = basename(path_project), packages = "mamba")
+
+    # https://rstudio.github.io/reticulate/reference/conda-tools.html
+    # https://github.com/rstudio/reticulate/issues/1196
+    # options(reticulate.conda_binary = Sys.which("mamba"))
+    # # getOption("reticulate.conda_binary")
+  }
+
 }

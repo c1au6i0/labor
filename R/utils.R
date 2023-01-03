@@ -32,14 +32,16 @@ return_dots <- function(x) {
 #'
 #' @export
 #
-remove_file <- function(file_name){
+remove_file <- function(file_name, path_to_look){
 
-  system("find . -name ", file_name, " -print0 | xargs -0 git rm -f --ignore-unmatch")
+  system_cmd <- paste("find", path_to_look, "-name ", file_name, "-print0 | xargs -0 git rm -f --ignore-unmatch", sep = " ")
+
+  system(system_cmd)
 
   files_here <- list.files(here::here(), all.files = TRUE)
 
   if(!".gitignore" %in% files_here){
-    stop("Initiate git launching git init in the terminal!")
+    file.create(fs::path(path_to_look, ".gitignore"))
   }
 
   git_ignore <- scan(here::here(".gitignore"), what = "character", quiet = TRUE)
@@ -70,7 +72,7 @@ retrive_file_pkg <- function(file_name){
 
 retrive_copy_files_pkg <- function(file_names, folder_out) {
 
-  files_to_parent <- lapply(file_names, retrive_file_pkg)
+  files_to_parent <- as.character(lapply(file_names, retrive_file_pkg))
 
   file.copy(from = files_to_parent, to = folder_out)
 
