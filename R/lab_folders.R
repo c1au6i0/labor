@@ -139,19 +139,10 @@ setup_lab_project <- function(
     dir.create(path_project)
   }
 
-  # cli::cli_h1("Setting up renv...")
-  usethis::create_project(path = path_project, open = FALSE)
-  install.packages(c("renv", "BiocManager"))
-  renv::install("c1au6i0/labor")
-  renv::install(project = path_project, packages =  pkg_to_install, prompt = FALSE)
-  renv::init(project = path_project, bioconductor = TRUE, restart = FALSE)
-  renv::activate(project = path_project)
-  renv::snapshot(project = path_project)
-
 
   create_labtree(path_project = path_project)
 
-  # cli::cli_h1("Coping files...")
+  cli::cli_h1("Copying files...")
   if (use_targets %in% c("local", "cluster")) {
 
     dir.create(fs::path(path_project,"code", "targets_functions"))
@@ -169,7 +160,6 @@ setup_lab_project <- function(
       "_targets_resources.conf.R",
       "_targets_slurm.R",
       "batchtools.slurm.tmpl",
-      "project_name.Rproj",
       "README_cluster_target.Rmd"
     )
 
@@ -179,6 +169,19 @@ setup_lab_project <- function(
     fs::file_move(before_rename, after_rename)
   }
 
+  # cli::cli_h1("Setting up renv...")
+  usethis::create_project(path = path_project, open = FALSE)
+  usethis::with_project(
+    path = path_project,
+    {
+      install.packages(c("renv", "BiocManager"))
+      remotes::install_github("c1au6i0/labor@dev")
+      renv::install(project = path_project, packages =  pkg_to_install, prompt = FALSE)
+      renv::init(project = path_project, bioconductor = TRUE, restart = FALSE)
+      renv::activate(project = path_project)
+      renv::snapshot(project = path_project)
+    }
+  )
 
   # cli::cli_h1("Setting up git...")
   if (use_git) {
@@ -191,11 +194,17 @@ setup_lab_project <- function(
 
  # cli::cli_h1("Setting up git...")
   if(use_python) {
+
+    usethis::with_project(
+      path = path_project,
+
     # https://stackoverflow.com/questions/51585149/cant-figure-out-how-to-use-conda-environment-after-reticulateuse-condaenvpat
-    system("conda ")
-    renv::install("reticulate")
-    renv::use_python(project = path_project, type = "virtualenv")
-    reticulate::conda_install(envname = basename(path_project), packages = "mamba")
+    {
+      renv::install("reticulate")
+      renv::use_python(project = path_project, type = "virtualenv")
+      reticulate::conda_install(envname = basename(path_project), packages = "mamba")
+    }
+    )
 
     # https://rstudio.github.io/reticulate/reference/conda-tools.html
     # https://github.com/rstudio/reticulate/issues/1196
