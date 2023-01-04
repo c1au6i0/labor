@@ -15,7 +15,6 @@ Imports:
     fs,
     git2r,
     here (>= 0.1),
-    svDialogs (>= 1.0.2),
     tidyr (>= 1.1.0),
     magrittr (>= 1.5),
     knitr (>= 1.28),

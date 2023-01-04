@@ -1,6 +1,6 @@
 #' check if path exists
 #'
-#' Check if the path exists.
+#' Check if the path exists, if not it creates it.
 #'
 #' @param path the path of the folder to check
 #' @return the `path` if exists, otherwise it throws an error
@@ -8,10 +8,10 @@
 check_path <- function(path) {
 
   # does folder exists
-  if (dir.exists(path) == FALSE) {
-    stop(paste0("The directory ", path, " does not exist!"))
+  if (!fs::file_exists(path)) {
+    fs::dir_create(path)
   }
-
+  cli::cli_alert_info("Folder {.file {path}} created.")
   path
 }
 
@@ -38,22 +38,26 @@ remove_file <- function(file_name, path_to_look){
 
   system(system_cmd)
 
-  files_here <- list.files(here::here(), all.files = TRUE)
+  files_here <- fs::dir_ls(path_to_look, type = "file", all = TRUE)
 
   if(!".gitignore" %in% files_here){
-    file.create(fs::path(path_to_look, ".gitignore"))
+    fs::file_create(file.path(path_to_look, ".gitignore"))
   }
 
   git_ignore <- scan(here::here(".gitignore"), what = "character", quiet = TRUE)
 
   if(file_name %in% git_ignore){
-    message(paste0(file_name, " already in .gitignore!"))
+
+    cli::cli_alert_info("File {.file {file_name}} already in .gitignore.")
   } else {
-    message(".gitignore has been updated!")
+
+    cli::cli_alert_info("File {.file {file_name}} added to {.file .gitignore}.")
     cat(file_name, file = here::here(".gitignore"), append = TRUE, sep = "\n")
   }
 
   message(paste0("\n",file_name, "files removed!"))
+  cli::cli_alert_info("File {.file {file_name}} recursevelly removed")
+
 
 }
 

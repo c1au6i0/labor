@@ -6,13 +6,10 @@
 labtree <- function() {
   c(
     "code",
-    "data",
-    "documents",
-    "figs_tabs",
-    "manuscripts",
-    "misc",
-    "objs",
-    "reports"
+    file.path("data", "raw"),
+    file.path("data", "other"),
+    file.path("reports", "tabs_figs"),
+    "other"
   )
 }
 
@@ -21,14 +18,12 @@ labtree <- function() {
 #' Create labtree.
 #'
 #' Create the folder tree and relative documentation files. If folders are already present, it will ask
-#' which one to overwrite. It use the library `svDialogs` as interactive gui.
+#' which one to overwrite.
 #'
 #' @param path Where to create the folder (default is `here()`).
-#' @param interative Boolean. If folder of the project is not empty, and interactive is `TRUE`, it will open `svDialogs` to
-#' ask user to choose folders to overwrite.
 #' @export
 #' @keywords internal
-create_labtree <- function(path_project = here::here(), interactive = TRUE) {
+create_labtree <- function(path_project = here::here()) {
 
   check_path(path_project)
   folders_t <- labtree()
@@ -43,34 +38,31 @@ create_labtree <- function(path_project = here::here(), interactive = TRUE) {
 
     to_create <- full_folders_t[!already_there]
 
-
-    lapply(to_create, dir.create)
+    fs::dir_create(to_create)
 
     # choose the destiny of the others
-    resp <- svDialogs::dlg_list(
+    resp <- utils::select.list(
       title = "The containing folder is not empty, which one do you want to overwrite?\n",
       multiple = TRUE,
       full_folders_t[already_there]
-    )$res
+    )
 
     # do what you have been told
     if (length(resp) == 0) {
-      message("Nothing to do here then!")
+      cli::cli_alert_info("Nothing to do here then.")
 
       # Overwrite
     } else {
       unlink(resp, recursive = TRUE)
-      lapply(resp, dir.create)
-
-
-      message("Folders overwrote!\n")
+      fs::dir_create(resp)
+      cli::cli_alert_success("Folders overwrote.")
     }
   } else {
 
-    lapply(file.path(path_project, folders_t), dir.create)
+    fs::dir_create(file.path(path_project, folders_t))
   }
 
-  message("Da da! All done!")
+  cli::cli_alert_success("Lab folder tree created.")
 }
 
 
@@ -88,28 +80,8 @@ remove_labtree <- function(project_oath = here::here()) {
   full_folders_t <- paste0(project_path, folders_t)
   unlink(full_folders_t, recursive = TRUE)
 
-  message("Folders and readme removed!\n")
+  cli::cli_alert_success("Folders removed.")
 }
-
-
-
-
-#' labtree wizard.
-#' #'
-#' #' Choose folders to use in the labtree.
-#'
-#' #' @param path path
-#' setup_labtree <- function(project_path = here::here()) {
-#'   # we add data by default.
-#'
-#'   # do you want to use the defaul labtree?
-#'
-#'   folders_user <- svDialogs::dlg_input("Insert the name of folders separated by comma and without quotes")$res
-#'   folders_stripted <- unlist(strsplit(folders_user, ","))
-#'   folders_cl <- unique(c(gsub("[[:punct:]]|\\s", "", folders_stripted), "data"))
-#' }
-
-
 
 
 #' set up project
@@ -134,18 +106,14 @@ setup_lab_project <- function(
                               ) {
 
 
-
-  if (!file.exists(path_project)) {
-    dir.create(path_project)
-  }
-
+  check_path(path_project)
 
   create_labtree(path_project = path_project)
 
   cli::cli_h1("Copying files...")
   if (use_targets %in% c("local", "cluster")) {
 
-    dir.create(fs::path(path_project,"code", "targets_functions"))
+    fs::dir_create(file.path(path_project,"code", "targets_functions"))
     retrive_copy_files_pkg(c("README.Rmd", "_targets.R"), folder_out = path_project)
     retrive_copy_files_pkg("functions.R", fs::path(path_project, "code", "targets_functions"))
 
@@ -189,8 +157,6 @@ setup_lab_project <- function(
         lapply(files_git_rm, remove_file, path_to_look = path_project) # remove annoying files
 
   }
-
-
 
  # cli::cli_h1("Setting up git...")
   if(use_python) {
