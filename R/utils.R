@@ -68,19 +68,20 @@ remove_file <- function(file_name, path_to_look){
 #' Find path of file in {labor} package.
 #'
 #' @param file_name
+#' @param folder_out  Where to copy the files.
 retrive_file_pkg <- function(file_name){
 
   file.path(.libPaths(), "labor", file_name)[1]
 
 }
 
+
+
 retrive_copy_files_pkg <- function(file_names, folder_out) {
 
   files_to_parent <- as.character(lapply(file_names, retrive_file_pkg))
 
   file.copy(from = files_to_parent, to = folder_out)
-
-
 }
 
 

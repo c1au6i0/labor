@@ -70,6 +70,16 @@
       "Hash": "e9c08b94391e9f3f97355841229124f2",
       "Requirements": []
     },
+    "RcppTOML": {
+      "Package": "RcppTOML",
+      "Version": "0.1.7",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "f8a578aa91321ecec1292f1e2ffadeda",
+      "Requirements": [
+        "Rcpp"
+      ]
+    },
     "askpass": {
       "Package": "askpass",
       "Version": "1.1",
@@ -622,6 +632,14 @@
         "jsonlite"
       ]
     },
+    "git2r": {
+      "Package": "git2r",
+      "Version": "0.30.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "e0c6a04a3e7b90e64213d09128f74f1b",
+      "Requirements": []
+    },
     "gitcreds": {
       "Package": "gitcreds",
       "Version": "0.1.2",
@@ -1128,6 +1146,14 @@
         "withr"
       ]
     },
+    "png": {
+      "Package": "png",
+      "Version": "0.1-8",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "bd54ba8a0a5faded999a7aab6e46b374",
+      "Requirements": []
+    },
     "praise": {
       "Package": "praise",
       "Version": "1.0.0",
@@ -1270,6 +1296,14 @@
         "tibble"
       ]
     },
+    "remotes": {
+      "Package": "remotes",
+      "Version": "2.4.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "227045be9aee47e6dda9bb38ac870d67",
+      "Requirements": []
+    },
     "renv": {
       "Package": "renv",
       "Version": "0.16.0",
@@ -1301,6 +1335,23 @@
         "rlang",
         "rmarkdown",
         "rstudioapi",
+        "withr"
+      ]
+    },
+    "reticulate": {
+      "Package": "reticulate",
+      "Version": "1.26",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "91c176c84a2e3558572d2cbaddc08bd4",
+      "Requirements": [
+        "Matrix",
+        "Rcpp",
+        "RcppTOML",
+        "here",
+        "jsonlite",
+        "png",
+        "rappdirs",
         "withr"
       ]
     },
@@ -1460,30 +1511,6 @@
         "stringi",
         "vctrs"
       ]
-    },
-    "svDialogs": {
-      "Package": "svDialogs",
-      "Version": "1.1.0",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "svDialogs",
-      "RemoteUsername": "SciViews",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "0a6f9e227979cd81aab3233054ffa694571f10e4",
-      "Hash": "cd53c08e5cbecfe6b42056462f0a63d8",
-      "Requirements": [
-        "rstudioapi",
-        "svGUI"
-      ]
-    },
-    "svGUI": {
-      "Package": "svGUI",
-      "Version": "1.0.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "9fbe58db2d45cb3ce6ff47b2e1217b40",
-      "Requirements": []
     },
     "sys": {
       "Package": "sys",
