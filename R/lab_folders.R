@@ -99,8 +99,21 @@ remove_labtree <- function(project_oath = here::here()) {
 setup_lab_project <- function(
                               path_project = here::here(),
                               use_targets = FALSE,
-                              pkg_to_install = c("BiocManager","devtools", "here", "git2r","lintr", "languageserver", "renv", "targets", "tidyverse", "usethis"),
-                              files_git_rm = c(".DS_Store", "._.DS_Store", "._.*"),
+                              pkg_to_install = c("BiocManager",
+                                                 "devtools",
+                                                 "here",
+                                                 "git2r",
+                                                 "lintr",
+                                                 "languageserver",
+                                                 "renv",
+                                                 "targets",
+                                                 "tidyverse",
+                                                 "usethis"),
+                              files_git_rm = c(
+                                               ".DS_Store",
+                                               "._.DS_Store",
+                                               "._.*"
+                                               ),
                               use_python = TRUE,
                               use_git = TRUE
                               ) {
@@ -124,6 +137,7 @@ setup_lab_project <- function(
     lapply(c("README.Rmd", "_targets.R"), unlink)
 
     files_to_copy <- c(
+      ".Rprofile",
       "_start_targets.sh",
       "_targets_resources.conf.R",
       "_targets_slurm.R",
@@ -132,7 +146,7 @@ setup_lab_project <- function(
     )
 
     retrive_copy_files_pkg(file_names = files_to_copy, folder_out = path_project)
-    before_rename <- fs::path(path_project, c("README_cluster_target.Rmd", "_targets_resources.conf.R"))
+    before_rename <- fs::path(path_project, c("README_cluster_target.Rmd", "_targets_slurm.R"))
     after_rename <- fs::path(path_project, c("README.Rmd", "_targets.R"))
     fs::file_move(before_rename, after_rename)
   }
@@ -148,13 +162,20 @@ setup_lab_project <- function(
       renv::init(project = path_project, bioconductor = TRUE, restart = FALSE)
       renv::activate(project = path_project)
       renv::snapshot(project = path_project)
+      detools::install("~/.vim/plugged/Nvim-R/R/nvimcom")
     }
   )
 
+
   # cli::cli_h1("Setting up git...")
   if (use_git) {
-        git2r::init(path_project)
-        lapply(files_git_rm, remove_file, path_to_look = path_project) # remove annoying files
+    usethis::with_project(
+        path = path_project,
+        {
+          git2r::init(path_project)
+          lapply(files_git_rm, remove_file, path_to_look = path_project) # remove annoying files
+        }
+    )
 
   }
 
@@ -177,5 +198,9 @@ setup_lab_project <- function(
     # options(reticulate.conda_binary = Sys.which("mamba"))
     # # getOption("reticulate.conda_binary")
   }
+
+  # In your R project directory install nvimcom that is used by Nvim-R
+  #
+  # devtools::install("~/.vim/plugged/Nvim-R/R/nvimcom")
 
 }
