@@ -7,8 +7,8 @@
 setup_lab_project(
   path_project,
   use_targets = FALSE,
-  pkg_to_install = c("BiocManager", "devtools", "here", "git2r", "lintr",
-    "languageserver", "renv", "targets", "tidyverse", "usethis"),
+  pkg_to_install = c("BiocManager", "devtools", "here", "lintr", "languageserver",
+    "renv", "targets", "tidyverse", "usethis"),
   files_git_rm = c(".DS_Store", "._.DS_Store", "._.*"),
   use_python = TRUE,
   use_git = TRUE
