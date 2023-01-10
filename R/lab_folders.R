@@ -155,13 +155,13 @@ setup_lab_project <- function(
   usethis::with_project(
     path = path_project,
     {
-      utils::install.packages(c("renv", "BiocManager", "devtools"))
+      utils::install.packages(c("renv", "BiocManager"))
       remotes::install_github("c1au6i0/labor@dev")
       renv::install(project = path_project, packages =  pkg_to_install, prompt = FALSE)
       renv::init(project = path_project, bioconductor = TRUE, restart = FALSE)
       renv::activate(project = path_project)
       renv::snapshot(project = path_project)
-      devtools::install("~/.vim/plugged/Nvim-R/R/nvimcom")
+      renv::install(project = path_project, "~/.vim/plugged/Nvim-R/R/nvimcom")
     }
   )
 
