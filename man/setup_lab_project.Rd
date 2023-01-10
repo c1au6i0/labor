@@ -10,7 +10,6 @@ setup_lab_project(
   pkg_to_install = c("BiocManager", "devtools", "here", "lintr", "languageserver",
     "renv", "targets", "tidyverse", "usethis"),
   files_git_rm = c(".DS_Store", "._.DS_Store", "._.*"),
-  use_python = TRUE,
   use_git = TRUE
 )
 }
@@ -23,8 +22,6 @@ setup_lab_project(
 \item{pkg_to_install}{A vector of packages to install.}
 
 \item{files_git_rm}{A vector of files name to remove.}
-
-\item{use_python}{If TRUE launch \code{renv::use_python()}}
 
 \item{use_git}{If TRUE install git}
 }

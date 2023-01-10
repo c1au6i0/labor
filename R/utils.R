@@ -70,8 +70,9 @@ remove_file <- function(file_name, path_to_look){
 #' @param file_name Name of the file.
 retrive_file_pkg <- function(file_name){
 
-  file.path(.libPaths(), "labor", file_name)[1]
-
+  out <- file.path(.libPaths(), "labor", file_name)[1]
+  if(!fs::file_exists(out)) stop("Could not retrive file!")
+  out
 }
 
 #' Retrieve file and copy it

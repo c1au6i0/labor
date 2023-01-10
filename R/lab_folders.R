@@ -91,7 +91,6 @@ remove_labtree <- function(project_path) {
 #'  , and update `README.Rmd`. If "cluster" add other config files for use with `slurm` and update `README.Rmd` accordingly.
 #' @param pkg_to_install A vector of packages to install.
 #' @param files_git_rm A vector of files name to remove.
-#' @param use_python If TRUE launch `renv::use_python()`
 #' @param use_git If TRUE install git
 #' @export
 setup_lab_project <- function(
@@ -106,12 +105,7 @@ setup_lab_project <- function(
                                                  "targets",
                                                  "tidyverse",
                                                  "usethis"),
-                              files_git_rm = c(
-                                               ".DS_Store",
-                                               "._.DS_Store",
-                                               "._.*"
-                                               ),
-                              use_python = TRUE,
+                              # use_python = TRUE,
                               use_git = TRUE
                               ) {
 
@@ -124,29 +118,31 @@ setup_lab_project <- function(
   if (use_targets %in% c("local", "cluster")) {
 
     fs::dir_create(file.path(path_project,"code", "targets_functions"))
-    retrive_copy_files_pkg(c("README.Rmd", "_targets.R"), folder_out = path_project)
-    retrive_copy_files_pkg("functions.R", fs::path(path_project, "code", "targets_functions"))
+    retrive_copy_files_pkg("other.tar.gz", folder_out = path_project)
+    utils::untar(tarfile = file.path(path_project, "other.tar.gz"), exdir = path_project)
+    fs::file_delete(file.path(path_project, "other.tar.gz"))
 
   }
 
   if (use_targets == "cluster") {
 
-    lapply(c("README.Rmd", "_targets.R"), unlink)
+    fs::dir_create(file.path(path_project, "log"))
 
-    files_to_copy <- c(
-      ".lintr",
-      ".Rprofile",
-      "_start_targets.sh",
-      "_targets_resources.conf.R",
-      "_targets_slurm.R",
-      "batchtools.slurm.tmpl",
-      "README_cluster_target.Rmd"
+    fs::file_delete(
+      c(file.path(path_project, "README.Rmd"),
+                      file.path(path_project, "_targets.R"))
     )
 
-    retrive_copy_files_pkg(file_names = files_to_copy, folder_out = path_project)
+
+    retrive_copy_files_pkg("cluster.tar.gz", folder_out = path_project)
+    utils::untar(tarfile = file.path(path_project, "cluster.tar.gz"), exdir = path_project)
+    fs::file_delete(file.path(path_project, "cluster.tar.gz"))
+
     before_rename <- fs::path(path_project, c("README_cluster_target.Rmd", "_targets_slurm.R"))
     after_rename <- fs::path(path_project, c("README.Rmd", "_targets.R"))
     fs::file_move(before_rename, after_rename)
+
+
   }
 
   # cli::cli_h1("Setting up renv...")
@@ -172,34 +168,27 @@ setup_lab_project <- function(
         {
           renv::install(project = path_project, "git2r")
           git2r::init(path_project)
-          lapply(files_git_rm, remove_file, path_to_look = path_project) # remove annoying files
+          usethis::git_vaccinate()
         }
     )
 
   }
 
- # cli::cli_h1("Setting up git...")
-  if(use_python) {
+ # # cli::cli_h1("Setting up git...")
+ #  if(use_python) {
+ #
+ #    usethis::with_project(
+ #      path = path_project,
+ #
+ #    # https://stackoverflow.com/questions/51585149/cant-figure-out-how-to-use-conda-environment-after-reticulateuse-condaenvpat
+ #    {
+ #      renv::install("reticulate")
+ #      renv::use_python(project = path_project, type = "virtualenv")
+ #      reticulate::conda_install(envname = basename(path_project), packages = "mamba")
+ #    }
+ #    )
 
-    usethis::with_project(
-      path = path_project,
+  # }
 
-    # https://stackoverflow.com/questions/51585149/cant-figure-out-how-to-use-conda-environment-after-reticulateuse-condaenvpat
-    {
-      renv::install("reticulate")
-      renv::use_python(project = path_project, type = "virtualenv")
-      reticulate::conda_install(envname = basename(path_project), packages = "mamba")
-    }
-    )
-
-    # https://rstudio.github.io/reticulate/reference/conda-tools.html
-    # https://github.com/rstudio/reticulate/issues/1196
-    # options(reticulate.conda_binary = Sys.which("mamba"))
-    # # getOption("reticulate.conda_binary")
-  }
-
-  # In your R project directory install nvimcom that is used by Nvim-R
-  #
-  # devtools::install("~/.vim/plugged/Nvim-R/R/nvimcom")
 
 }
