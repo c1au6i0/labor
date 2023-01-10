@@ -8,8 +8,7 @@ setup_lab_project(
   path_project,
   use_targets = FALSE,
   pkg_to_install = c("BiocManager", "devtools", "here", "lintr", "languageserver",
-    "renv", "targets", "tidyverse", "usethis"),
-  use_git = TRUE
+    "renv", "targets", "tidyverse", "usethis")
 )
 }
 \arguments{
@@ -19,8 +18,6 @@ setup_lab_project(
 , and update \code{README.Rmd}. If "cluster" add other config files for use with \code{slurm} and update \code{README.Rmd} accordingly.}
 
 \item{pkg_to_install}{A vector of packages to install.}
-
-\item{use_git}{If TRUE install git}
 
 \item{files_git_rm}{A vector of files name to remove.}
 }

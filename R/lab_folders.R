@@ -91,7 +91,6 @@ remove_labtree <- function(project_path) {
 #'  , and update `README.Rmd`. If "cluster" add other config files for use with `slurm` and update `README.Rmd` accordingly.
 #' @param pkg_to_install A vector of packages to install.
 #' @param files_git_rm A vector of files name to remove.
-#' @param use_git If TRUE install git
 #' @export
 setup_lab_project <- function(
                               path_project,
@@ -104,9 +103,9 @@ setup_lab_project <- function(
                                                  "renv",
                                                  "targets",
                                                  "tidyverse",
-                                                 "usethis"),
+                                                 "usethis")
                               # use_python = TRUE,
-                              use_git = TRUE
+                              # use_git = FALSE
                               ) {
 
 
@@ -151,7 +150,6 @@ setup_lab_project <- function(
     path = path_project,
     {
       utils::install.packages(c("renv", "BiocManager"))
-      remotes::install_github("c1au6i0/labor@dev")
       renv::install(project = path_project, packages =  pkg_to_install, prompt = FALSE)
       renv::init(project = path_project, bioconductor = TRUE, restart = FALSE)
       renv::activate(project = path_project)
@@ -161,18 +159,20 @@ setup_lab_project <- function(
   )
 
 
-  # cli::cli_h1("Setting up git...")
-  if (use_git) {
-    usethis::with_project(
-        path = path_project,
-        {
-          renv::install(project = path_project, "git2r")
-          git2r::init(path_project)
-          usethis::git_vaccinate()
-        }
-    )
-
-  }
+  # # cli::cli_h1("Setting up git...")
+  # if (use_git) {
+  #   usethis::with_project(
+  #       path = path_project,
+  #       {
+  #         renv::install(project = path_project, "git2r")
+  #         git2r::init(path_project)
+  #         renv::install("gert")
+  #         usethis::git_vaccinate()
+  #         write("._*", file = file.path(path_project, ".gitignore"), append = TRUE)
+  #       }
+  #   )
+  #
+  # }
 
  # # cli::cli_h1("Setting up git...")
  #  if(use_python) {
