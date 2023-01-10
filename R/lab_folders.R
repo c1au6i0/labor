@@ -155,7 +155,7 @@ setup_lab_project <- function(
   usethis::with_project(
     path = path_project,
     {
-      utils::install.packages(c("renv", "BiocManager"))
+      utils::install.packages(c("renv", "BiocManager", "devtools"))
       remotes::install_github("c1au6i0/labor@dev")
       renv::install(project = path_project, packages =  pkg_to_install, prompt = FALSE)
       renv::init(project = path_project, bioconductor = TRUE, restart = FALSE)
