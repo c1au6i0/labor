@@ -9,7 +9,6 @@ setup_lab_project(
   use_targets = FALSE,
   pkg_to_install = c("BiocManager", "devtools", "here", "lintr", "languageserver",
     "renv", "targets", "tidyverse", "usethis"),
-  files_git_rm = c(".DS_Store", "._.DS_Store", "._.*"),
   use_git = TRUE
 )
 }
@@ -21,9 +20,9 @@ setup_lab_project(
 
 \item{pkg_to_install}{A vector of packages to install.}
 
-\item{files_git_rm}{A vector of files name to remove.}
-
 \item{use_git}{If TRUE install git}
+
+\item{files_git_rm}{A vector of files name to remove.}
 }
 \description{
 Install some packages commonly used, initiate \code{renv} and create the project structure.
