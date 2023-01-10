@@ -100,7 +100,6 @@ setup_lab_project <- function(
                               pkg_to_install = c("BiocManager",
                                                  "devtools",
                                                  "here",
-                                                 "git2r",
                                                  "lintr",
                                                  "languageserver",
                                                  "renv",
@@ -171,6 +170,7 @@ setup_lab_project <- function(
     usethis::with_project(
         path = path_project,
         {
+          renv::install(project = path_project, "git2r")
           git2r::init(path_project)
           lapply(files_git_rm, remove_file, path_to_look = path_project) # remove annoying files
         }
