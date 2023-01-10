@@ -1,19 +1,30 @@
-# _targets.R
-
+library(future)
+library(future.batchtools)
+library(batchtools)
 library(targets)
 library(tarchetypes)
 library(here)
+library(ggplot2)
 source(here("code", "targets_functions", "functions.R"))
 
 # @@@@@@@@@@@@
 # Set Up -----
 # @@@@@@@@@@@
 
+
+# Initiate file for defining slurm resources to use in targets
+source(here::here("_targets_resources.conf.R"))
+
+ggplot2::theme_set(theme_bw())
+
 options(tidyverse.quiet = TRUE)
+
 tar_option_set(
+  resources = resources_all,
   packages = c(
     "janitor",
     "lubridate",
+    "fs",
     "tidyverse",
     "vroom",
     "openxlsx"
@@ -24,7 +35,6 @@ tar_option_set(
   retrieval = "worker",
   memory = "transient"
 )
-
 
 list(
   # tar_file_read(
