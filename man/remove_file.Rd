@@ -4,7 +4,12 @@
 \alias{remove_file}
 \title{Remove File}
 \usage{
-remove_file(file_name)
+remove_file(file_name, path_to_look)
+}
+\arguments{
+\item{file_name}{Name of the file to remove.}
+
+\item{path_to_look}{Where to look into.}
 }
 \description{
 Function that remove a file recursivelly and added it to .gitignore to avoid tracking of those files. Based on

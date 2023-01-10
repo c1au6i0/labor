@@ -4,16 +4,13 @@
 \alias{create_labtree}
 \title{Create labtree.}
 \usage{
-create_labtree(path_project = here::here(), interactive = TRUE)
+create_labtree(path_project)
 }
 \arguments{
 \item{path}{Where to create the folder (default is \code{here()}).}
-
-\item{interative}{Boolean. If folder of the project is not empty, and interactive is \code{TRUE}, it will open \code{svDialogs} to
-ask user to choose folders to overwrite.}
 }
 \description{
 Create the folder tree and relative documentation files. If folders are already present, it will ask
-which one to overwrite. It use the library \code{svDialogs} as interactive gui.
+which one to overwrite.
 }
 \keyword{internal}

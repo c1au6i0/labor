@@ -2,33 +2,32 @@
 % Please edit documentation in R/lab_folders.R
 \name{setup_lab_project}
 \alias{setup_lab_project}
-\title{labtree wizard.
-#'
-#' Choose folders to use in the labtree.}
+\title{set up project}
 \usage{
 setup_lab_project(
+  path_project,
   use_targets = FALSE,
-  path_project = here::here(),
-  pkg_to_install = c("devtools", "here", "reticulate", "tidyverse", "usethis"),
+  pkg_to_install = c("BiocManager", "devtools", "here", "git2r", "lintr",
+    "languageserver", "renv", "targets", "tidyverse", "usethis"),
   files_git_rm = c(".DS_Store", "._.DS_Store", "._.*"),
-  proj_name,
-  use_python = TRUE
+  use_python = TRUE,
+  use_git = TRUE
 )
 }
 \arguments{
+\item{path_project}{Where to setup the project.}
+
 \item{use_targets}{If FALSE, do not use targets. If "local" install targets packages, add \verb{_target.R} and \code{function.R} files
 , and update \code{README.Rmd}. If "cluster" add other config files for use with \code{slurm} and update \code{README.Rmd} accordingly.}
 
 \item{pkg_to_install}{A vector of packages to install.}
 
-\item{proj_name}{If \code{use_targets = "cluster"}, name of the project. Used to rename file.Rprj}
+\item{files_git_rm}{A vector of files name to remove.}
 
 \item{use_python}{If TRUE launch \code{renv::use_python()}}
+
+\item{use_git}{If TRUE install git}
 }
 \description{
-
+Install some packages commonly used, initiate \code{renv} and create the project structure.
 }
-\section{do you want to use the defaul labtree?}{
-
-}
-

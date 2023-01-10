@@ -6,6 +6,9 @@
 \usage{
 retrive_file_pkg(file_name)
 }
+\arguments{
+\item{file_name}{Name of the file.}
+}
 \description{
 Find path of file in {labor} package.
 }

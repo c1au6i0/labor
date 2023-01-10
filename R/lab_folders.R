@@ -23,7 +23,7 @@ labtree <- function() {
 #' @param path Where to create the folder (default is `here()`).
 #' @export
 #' @keywords internal
-create_labtree <- function(path_project = here::here()) {
+create_labtree <- function(path_project) {
 
   check_path(path_project)
   folders_t <- labtree()
@@ -70,10 +70,10 @@ create_labtree <- function(path_project = here::here()) {
 #'
 #' Femove the folder tree and relative documentation files.
 #'
-#' @param path where to create the folder (defaut is `here()`)
+#' @param project_path where to create the folder
 #'
 #' @export
-remove_labtree <- function(project_oath = here::here()) {
+remove_labtree <- function(project_path) {
   project <- check_path(project_path)
 
   folders_t <- labtree()
@@ -88,16 +88,16 @@ remove_labtree <- function(project_oath = here::here()) {
 #'
 #' Install some packages commonly used, initiate `renv` and create the project structure.
 #'
+#' @param path_project Where to setup the project.
 #' @param use_targets If FALSE, do not use targets. If "local" install targets packages, add `_target.R` and `function.R` files
 #'  , and update `README.Rmd`. If "cluster" add other config files for use with `slurm` and update `README.Rmd` accordingly.
-#' @param path_project
 #' @param pkg_to_install A vector of packages to install.
-#' @param proj_name If `use_targets = "cluster"`, name of the project. Used to rename file.Rprj
+#' @param files_git_rm A vector of files name to remove.
 #' @param use_python If TRUE launch `renv::use_python()`
 #' @param use_git If TRUE install git
 #' @export
 setup_lab_project <- function(
-                              path_project = here::here(),
+                              path_project,
                               use_targets = FALSE,
                               pkg_to_install = c("BiocManager",
                                                  "devtools",
@@ -137,6 +137,7 @@ setup_lab_project <- function(
     lapply(c("README.Rmd", "_targets.R"), unlink)
 
     files_to_copy <- c(
+      ".lintr",
       ".Rprofile",
       "_start_targets.sh",
       "_targets_resources.conf.R",
@@ -156,13 +157,13 @@ setup_lab_project <- function(
   usethis::with_project(
     path = path_project,
     {
-      install.packages(c("renv", "BiocManager"))
+      utils::install.packages(c("renv", "BiocManager"))
       remotes::install_github("c1au6i0/labor@dev")
       renv::install(project = path_project, packages =  pkg_to_install, prompt = FALSE)
       renv::init(project = path_project, bioconductor = TRUE, restart = FALSE)
       renv::activate(project = path_project)
       renv::snapshot(project = path_project)
-      detools::install("~/.vim/plugged/Nvim-R/R/nvimcom")
+      devtools::install("~/.vim/plugged/Nvim-R/R/nvimcom")
     }
   )
 

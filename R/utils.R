@@ -30,8 +30,9 @@ return_dots <- function(x) {
 #' Function that remove a file recursivelly and added it to .gitignore to avoid tracking of those files. Based on
 #' \href{https://stackoverflow.com/questions/107701/how-can-i-remove-ds-store-files-from-a-git-repository}{this post.}:
 #'
+#' @param file_name Name of the file to remove.
+#' @param path_to_look Where to look into.
 #' @export
-#
 remove_file <- function(file_name, path_to_look){
 
   system_cmd <- paste("find", path_to_look, "-name ", file_name, "-print0 | xargs -0 git rm -f --ignore-unmatch", sep = " ")
@@ -44,7 +45,7 @@ remove_file <- function(file_name, path_to_look){
     fs::file_create(file.path(path_to_look, ".gitignore"))
   }
 
-  git_ignore <- scan(here::here(".gitignore"), what = "character", quiet = TRUE)
+  git_ignore <- scan(file.path(path_to_look, ".gitignore"), what = "character", quiet = TRUE)
 
   if(file_name %in% git_ignore){
 
@@ -52,7 +53,7 @@ remove_file <- function(file_name, path_to_look){
   } else {
 
     cli::cli_alert_info("File {.file {file_name}} added to {.file .gitignore}.")
-    cat(file_name, file = here::here(".gitignore"), append = TRUE, sep = "\n")
+    cat(file_name, file = file.path(path_to_look, ".gitignore"), append = TRUE, sep = "\n")
   }
 
   message(paste0("\n",file_name, "files removed!"))
@@ -62,20 +63,23 @@ remove_file <- function(file_name, path_to_look){
 }
 
 
-
 #' Retrieve file from package
 #'
 #' Find path of file in {labor} package.
 #'
-#' @param file_name
-#' @param folder_out  Where to copy the files.
+#' @param file_name Name of the file.
 retrive_file_pkg <- function(file_name){
 
   file.path(.libPaths(), "labor", file_name)[1]
 
 }
 
-
+#' Retrieve file and copy it
+#'
+#' Find file in {labor} package and copy it.
+#'
+#' @param file_names Name of the files.
+#' @param folder_out Where to copy it.
 
 retrive_copy_files_pkg <- function(file_names, folder_out) {
 

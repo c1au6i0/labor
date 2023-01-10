@@ -4,10 +4,10 @@
 \alias{remove_labtree}
 \title{Remove labtree.}
 \usage{
-remove_labtree(project_oath = here::here())
+remove_labtree(project_path)
 }
 \arguments{
-\item{path}{where to create the folder (defaut is \code{here()})}
+\item{project_path}{where to create the folder}
 }
 \description{
 Femove the folder tree and relative documentation files.

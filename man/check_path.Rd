@@ -13,6 +13,6 @@ check_path(path)
 the \code{path} if exists, otherwise it throws an error
 }
 \description{
-Check if the path exists.
+Check if the path exists, if not it creates it.
 }
 \keyword{internal}
