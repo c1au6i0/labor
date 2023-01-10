@@ -21,10 +21,9 @@ labtree <- function() {
 #' which one to overwrite.
 #'
 #' @param path Where to create the folder (default is `here()`).
-#' @param interactive If `path_folder` is not empty should what to overwrite?
 #' @export
 #' @keywords internal
-create_labtree <- function(path_project, interactive = TRUE) {
+create_labtree <- function(path_project) {
 
   check_path(path_project)
   folders_t <- labtree()
@@ -34,8 +33,6 @@ create_labtree <- function(path_project, interactive = TRUE) {
   already_there <- unlist(lapply(full_folders_t, dir.exists))
   if (any(already_there)) {
     # create new folders
-
-    if (!interactive) stop("The folder is not empty!")
 
     to_create <- full_folders_t[!already_there]
 
