@@ -91,6 +91,7 @@ remove_labtree <- function(project_path) {
 #'  , and update `README.Rmd`. If "cluster" add other config files for use with `slurm` and update `README.Rmd` accordingly.
 #' @param pkg_to_install A vector of packages to install.
 #' @param files_git_rm A vector of files name to remove.
+#' @param use_git Use git.
 #' @export
 setup_lab_project <- function(
                               path_project,
@@ -103,9 +104,9 @@ setup_lab_project <- function(
                                                  "renv",
                                                  "targets",
                                                  "tidyverse",
-                                                 "usethis")
+                                                 "usethis"),
                               # use_python = TRUE,
-                              # use_git = FALSE
+                              use_git = TRUE
                               ) {
 
 
@@ -159,20 +160,19 @@ setup_lab_project <- function(
   )
 
 
-  # # cli::cli_h1("Setting up git...")
-  # if (use_git) {
-  #   usethis::with_project(
-  #       path = path_project,
-  #       {
-  #         renv::install(project = path_project, "git2r")
-  #         git2r::init(path_project)
-  #         renv::install("gert")
-  #         usethis::git_vaccinate()
-  #         write("._*", file = file.path(path_project, ".gitignore"), append = TRUE)
-  #       }
-  #   )
-  #
-  # }
+  # cli::cli_h1("Setting up git...")
+  if (use_git) {
+    usethis::with_project(
+        path = path_project,
+        {
+          renv::install(project = path_project, "git2r")
+          retrive_copy_files_pkg("git.tar.gz", folder_out = path_project)
+          utils::untar(tarfile = file.path(path_project, "git.tar.gz"), exdir = path_project)
+          fs::file_delete(file.path(path_project, "git.tar.gz"))
+        }
+    )
+
+  }
 
  # # cli::cli_h1("Setting up git...")
  #  if(use_python) {
