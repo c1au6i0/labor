@@ -114,6 +114,8 @@ setup_lab_project <- function(
 
   create_labtree(path_project = path_project)
 
+  retrive_copy_files_pkg("git.tar.gz", folder_out = path_project)
+
   cli::cli_h1("Copying files...")
   if (use_targets %in% c("local", "cluster")) {
 
@@ -121,6 +123,9 @@ setup_lab_project <- function(
     retrive_copy_files_pkg("other.tar.gz", folder_out = path_project)
     utils::untar(tarfile = file.path(path_project, "other.tar.gz"), exdir = path_project)
     fs::file_delete(file.path(path_project, "other.tar.gz"))
+
+
+
 
   }
 
@@ -164,31 +169,11 @@ setup_lab_project <- function(
   if (use_git) {
     usethis::with_project(
         path = path_project,
-        {
-          renv::install(project = path_project, "git2r")
-          retrive_copy_files_pkg("git.tar.gz", folder_out = path_project)
-          utils::untar(tarfile = file.path(path_project, "git.tar.gz"), exdir = path_project)
-          fs::file_delete(file.path(path_project, "git.tar.gz"))
-        }
-    )
-
+        renv::install(project = path_project, "git2r")
+        )
+    utils::untar(tarfile = file.path(path_project, "git.tar.gz"), exdir = path_project)
   }
 
- # # cli::cli_h1("Setting up git...")
- #  if(use_python) {
- #
- #    usethis::with_project(
- #      path = path_project,
- #
- #    # https://stackoverflow.com/questions/51585149/cant-figure-out-how-to-use-conda-environment-after-reticulateuse-condaenvpat
- #    {
- #      renv::install("reticulate")
- #      renv::use_python(project = path_project, type = "virtualenv")
- #      reticulate::conda_install(envname = basename(path_project), packages = "mamba")
- #    }
- #    )
-
-  # }
-
+  fs::file_delete(file.path(path_project, "git.tar.gz"))
 
 }
