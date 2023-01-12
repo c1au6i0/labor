@@ -3,7 +3,7 @@
 #' The list of folders to create. It is used internally.
 #'
 #' @keywords internal
-labtree <- function() {
+default_labtree <- function() {
   c(
     "code",
     file.path("data", "raw"),
@@ -14,20 +14,20 @@ labtree <- function() {
 }
 
 
-
 #' Create labtree.
 #'
 #' Create the folder tree and relative documentation files. If folders are already present, it will ask
 #' which one to overwrite.
 #'
 #' @param path Where to create the folder (default is `here()`).
-#' @export
+#' @export labtree A vector of folder names. For folder in folder use "reports/fig"
 #' @keywords internal
-create_labtree <- function(path_project) {
+create_labtree <- function(path_project, labtree = default_labtree()) {
 
   check_path(path_project)
-  folders_t <- labtree()
-  full_folders_t <- file.path(path_project, folders_t)
+
+  full_folders_t <- file.path(path_project, labtree)
+
 
   # folder is not empty--------------------------------------------
   already_there <- unlist(lapply(full_folders_t, dir.exists))
@@ -57,7 +57,7 @@ create_labtree <- function(path_project) {
     }
   } else {
 
-    fs::dir_create(file.path(path_project, folders_t))
+    fs::dir_create(file.path(path_project, labtree))
   }
 
   cli::cli_alert_success("Lab folder tree created.")
@@ -123,21 +123,14 @@ setup_lab_project <- function(
     retrive_copy_files_pkg("other.tar.gz", folder_out = path_project)
     utils::untar(tarfile = file.path(path_project, "other.tar.gz"), exdir = path_project)
     fs::file_delete(file.path(path_project, "other.tar.gz"))
-
-
-
-
   }
 
   if (use_targets == "cluster") {
-
     fs::dir_create(file.path(path_project, "log"))
-
     fs::file_delete(
       c(file.path(path_project, "README.Rmd"),
                       file.path(path_project, "_targets.R"))
     )
-
 
     retrive_copy_files_pkg("cluster.tar.gz", folder_out = path_project)
     utils::untar(tarfile = file.path(path_project, "cluster.tar.gz"), exdir = path_project)
@@ -146,8 +139,6 @@ setup_lab_project <- function(
     before_rename <- fs::path(path_project, c("README_cluster_target.Rmd", "_targets_slurm.R"))
     after_rename <- fs::path(path_project, c("README.Rmd", "_targets.R"))
     fs::file_move(before_rename, after_rename)
-
-
   }
 
   # cli::cli_h1("Setting up renv...")
@@ -175,5 +166,4 @@ setup_lab_project <- function(
   }
 
   fs::file_delete(file.path(path_project, "git.tar.gz"))
-
 }
