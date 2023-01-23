@@ -4,7 +4,7 @@
 \alias{create_labtree}
 \title{Create labtree.}
 \usage{
-create_labtree(path_project)
+create_labtree(path_project, labtree = default_labtree())
 }
 \arguments{
 \item{path}{Where to create the folder (default is \code{here()}).}
