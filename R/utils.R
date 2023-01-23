@@ -23,10 +23,10 @@ check_path <- function(path) {
 #'
 #' @param file_names Name of the files.
 #' @param folder_out Where to copy it.
-
 retrive_copy_files_pkg <- function(file_names, folder_out) {
 
-  files_to_parent <- as.character(lapply(file_names, fs::path_package))
+  path_labor <- fs::path_package("labor")
+  files_to_parent <- file.path(path_labor, file_names)
 
   fs::file_copy(path = files_to_parent, new_path = folder_out)
 }

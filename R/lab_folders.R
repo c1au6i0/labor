@@ -142,9 +142,8 @@ setup_lab_project <- function(
 
   # cli::cli_h1("Setting up git...")
   if (use_git) {
-  retrive_copy_files_pkg("git.tar.gz", folder_out = path_project)
-  utils::untar(tarfile = file.path(path_project, "git.tar.gz"), exdir = path_project)
-  fs::file_delete(file.path(path_project, "git.tar.gz"))
+     utils::untar(tarfile = file.path(path_project, "git.tar.gz"), exdir = path_project)
+     fs::file_delete(file.path(path_project, "git.tar.gz"))
   }
 
 }
