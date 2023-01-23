@@ -7,6 +7,8 @@
 create_labtree(path_project, labtree = default_labtree())
 }
 \arguments{
+\item{labtree}{A vector of folder names. For folder in folder use "reports/fig"}
+
 \item{path}{Where to create the folder (default is \code{here()}).}
 }
 \description{

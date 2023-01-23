@@ -20,7 +20,8 @@ default_labtree <- function() {
 #' which one to overwrite.
 #'
 #' @param path Where to create the folder (default is `here()`).
-#' @export labtree A vector of folder names. For folder in folder use "reports/fig"
+#' @param  labtree A vector of folder names. For folder in folder use "reports/fig"
+#' @export
 #' @keywords internal
 create_labtree <- function(path_project, labtree = default_labtree()) {
 
@@ -64,22 +65,6 @@ create_labtree <- function(path_project, labtree = default_labtree()) {
 }
 
 
-#' Remove labtree.
-#'
-#' Femove the folder tree and relative documentation files.
-#'
-#' @param project_path where to create the folder
-#'
-#' @export
-remove_labtree <- function(project_path) {
-  project <- check_path(project_path)
-
-  folders_t <- labtree()
-  full_folders_t <- paste0(project_path, folders_t)
-  unlink(full_folders_t, recursive = TRUE)
-
-  cli::cli_alert_success("Folders removed.")
-}
 
 
 #' set up project
@@ -90,7 +75,6 @@ remove_labtree <- function(project_path) {
 #' @param use_targets If FALSE, do not use targets. If "local" install targets packages, add `_target.R` and `function.R` files
 #'  , and update `README.Rmd`. If "cluster" add other config files for use with `slurm` and update `README.Rmd` accordingly.
 #' @param pkg_to_install A vector of packages to install.
-#' @param files_git_rm A vector of files name to remove.
 #' @param use_git Use git.
 #' @export
 setup_lab_project <- function(

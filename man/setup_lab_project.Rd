@@ -21,8 +21,6 @@ setup_lab_project(
 \item{pkg_to_install}{A vector of packages to install.}
 
 \item{use_git}{Use git.}
-
-\item{files_git_rm}{A vector of files name to remove.}
 }
 \description{
 Install some packages commonly used, initiate \code{renv} and create the project structure.
