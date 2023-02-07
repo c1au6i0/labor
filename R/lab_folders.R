@@ -107,6 +107,8 @@ setup_lab_project <- function(
     retrive_copy_files_pkg("other.tar.gz", folder_out = path_project)
     utils::untar(tarfile = file.path(path_project, "other.tar.gz"), exdir = path_project)
     fs::file_delete(file.path(path_project, "other.tar.gz"))
+    fs::file_move(file.path(path_project, "explore.qmd"), file.path(path_project, "reports", "explore.qmd"))
+    fs::file_move(file.path(path_project, "functions.R"), file.path(path_project, "code", "targets_functions","functions.R"))
   }
 
   if (use_targets == "cluster") {
