@@ -86,10 +86,7 @@ setup_lab_project <- function(
                                                  "lintr",
                                                  "languageserver",
                                                  "renv",
-                                                 "targets",
-                                                 "tidyverse",
-                                                 "usethis"),
-                              # use_python = TRUE,
+                                                 "targets"),
                               use_git = TRUE
                               ) {
 
@@ -135,8 +132,8 @@ setup_lab_project <- function(
       utils::install.packages(c("renv", "BiocManager"))
       renv::install(project = path_project, packages =  pkg_to_install, prompt = FALSE)
       renv::init(project = path_project, bioconductor = TRUE, restart = FALSE)
-      renv::activate(project = path_project)
-      renv::snapshot(project = path_project)
+      # renv::activate(project = path_project)
+      # renv::snapshot(project = path_project)
       renv::install(project = path_project, "~/.vim/plugged/Nvim-R/R/nvimcom")
     }
   )
